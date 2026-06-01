@@ -33,43 +33,38 @@
       background: linear-gradient(135deg, #1e3a5f 0%, #0d2137 100%);
       padding: 18px 16px 14px;
       border-bottom: 1px solid #243b55;
+      flex-shrink: 0;
     }
 
     #sidebar-header h1 {
       font-size: 15px;
       font-weight: 700;
-      color: #ffffff;
+      color: #fff;
       letter-spacing: 0.4px;
       line-height: 1.3;
     }
 
-    #sidebar-header p {
-      font-size: 11px;
-      color: #7ab3d4;
-      margin-top: 4px;
-    }
+    #sidebar-header p { font-size: 11px; color: #7ab3d4; margin-top: 4px; }
 
-    #sidebar-header .crown {
-      font-size: 22px;
-      margin-bottom: 6px;
-      display: block;
-    }
+    #sidebar-header .crown { font-size: 22px; margin-bottom: 6px; display: block; }
 
     /* ── Basemap selector ───────────────────────────────── */
-    .section-label {
+    .top-section-label {
       font-size: 10px;
       font-weight: 700;
       letter-spacing: 1.2px;
       text-transform: uppercase;
       color: #556a8a;
-      padding: 12px 16px 6px;
+      padding: 10px 16px 6px;
+      flex-shrink: 0;
     }
 
     #basemap-selector {
       display: flex;
       gap: 6px;
-      padding: 0 16px 10px;
+      padding: 0 16px 8px;
       border-bottom: 1px solid #1e2438;
+      flex-shrink: 0;
     }
 
     .basemap-btn {
@@ -87,30 +82,60 @@
       letter-spacing: 0.3px;
     }
 
-    .basemap-btn.active {
-      background: #1e3a5f;
-      border-color: #3b82c4;
-      color: #7ab3d4;
-    }
-
+    .basemap-btn.active { background: #1e3a5f; border-color: #3b82c4; color: #7ab3d4; }
     .basemap-btn:hover { background: #243050; color: #c0d4e8; }
 
-    /* ── Layer toggles ───────────────────────────────────── */
-    #layer-list {
+    /* ── Scrollable body ────────────────────────────────── */
+    #sidebar-scroll {
       flex: 1;
       overflow-y: auto;
-      padding: 4px 0;
+      display: flex;
+      flex-direction: column;
     }
 
-    #layer-list::-webkit-scrollbar { width: 4px; }
-    #layer-list::-webkit-scrollbar-track { background: transparent; }
-    #layer-list::-webkit-scrollbar-thumb { background: #2a3050; border-radius: 2px; }
+    #sidebar-scroll::-webkit-scrollbar { width: 4px; }
+    #sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+    #sidebar-scroll::-webkit-scrollbar-thumb { background: #2a3050; border-radius: 2px; }
 
+    /* ── Collapsible section headers ────────────────────── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 16px 6px;
+      cursor: pointer;
+      user-select: none;
+      border-top: 1px solid #1e2438;
+    }
+
+    .section-header:first-child { border-top: none; }
+
+    .section-header .sh-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #556a8a;
+    }
+
+    .section-header .sh-arrow {
+      font-size: 9px;
+      color: #3d5070;
+      transition: transform 0.2s;
+    }
+
+    .section-header.collapsed .sh-arrow { transform: rotate(-90deg); }
+    .section-header:hover .sh-label { color: #7ab3d4; }
+
+    .section-body { display: flex; flex-direction: column; }
+    .section-body.collapsed { display: none; }
+
+    /* ── Layer toggles ───────────────────────────────────── */
     .layer-item {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 9px 16px;
+      padding: 8px 16px;
       cursor: pointer;
       transition: background 0.15s;
       border-left: 3px solid transparent;
@@ -118,7 +143,6 @@
     }
 
     .layer-item:hover { background: #1a1f35; }
-
     .layer-item.active { border-left-color: var(--cat-color); }
 
     .layer-dot {
@@ -131,25 +155,16 @@
       font-size: 13px;
       flex-shrink: 0;
       background: var(--cat-color);
-      opacity: 0.9;
-      transition: opacity 0.2s, transform 0.2s;
+      opacity: 0.3;
+      transition: opacity 0.2s;
     }
 
-    .layer-item:not(.active) .layer-dot { opacity: 0.3; }
+    .layer-item.active .layer-dot { opacity: 0.9; }
 
     .layer-info { flex: 1; }
 
-    .layer-name {
-      font-size: 12px;
-      font-weight: 600;
-      color: #c8d6e8;
-    }
-
-    .layer-count {
-      font-size: 10px;
-      color: #556a8a;
-      margin-top: 1px;
-    }
+    .layer-name { font-size: 12px; font-weight: 600; color: #c8d6e8; }
+    .layer-count { font-size: 10px; color: #556a8a; margin-top: 1px; }
 
     .toggle-switch {
       width: 30px;
@@ -174,17 +189,13 @@
     }
 
     .layer-item.active .toggle-switch { background: var(--cat-color); }
-    .layer-item.active .toggle-switch::after {
-      background: white;
-      left: 16px;
-    }
+    .layer-item.active .toggle-switch::after { background: white; left: 16px; }
 
     /* ── Quick controls ─────────────────────────────────── */
-    #quick-controls {
+    .quick-controls {
       display: flex;
       gap: 6px;
-      padding: 8px 16px;
-      border-top: 1px solid #1e2438;
+      padding: 6px 16px 10px;
     }
 
     .ctrl-btn {
@@ -200,33 +211,275 @@
       font-weight: 600;
       transition: all 0.2s;
     }
+
     .ctrl-btn:hover { background: #243050; }
+
+    .ctrl-btn.primary-btn {
+      background: #1e3a5f;
+      border-color: #3b82c4;
+      color: #7ab3d4;
+    }
+
+    .ctrl-btn.primary-btn:hover { background: #244872; }
+
+    .ctrl-btn.danger-btn {
+      background: #2a1a1a;
+      border-color: #5a2a2a;
+      color: #eb3b5a;
+    }
+
+    .ctrl-btn.danger-btn:hover { background: #3a2020; }
+
+    .ctrl-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* ── Road section ────────────────────────────────────── */
+    .road-master-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: #0d1525;
+    }
+
+    .road-toggle-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #c8d6e8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .road-toggle-label .road-icon { font-size: 15px; }
+
+    /* Road type grid */
+    .road-types-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      padding: 6px 16px 8px;
+    }
+
+    .road-type-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      user-select: none;
+      background: #1a1d2e;
+      border: 1px solid #2a3050;
+      transition: all 0.15s;
+    }
+
+    .road-type-item:hover { background: #1e2438; }
+
+    .road-type-item.rt-active { border-color: var(--rt-color); }
+
+    .road-swatch {
+      width: 18px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--rt-color);
+      flex-shrink: 0;
+      opacity: 0.4;
+      transition: opacity 0.15s;
+    }
+
+    .road-type-item.rt-active .road-swatch { opacity: 1; }
+
+    .rt-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #8fa3c0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .road-type-item.rt-active .rt-label { color: #c8d6e8; }
+
+    /* Road status bar */
+    #road-status {
+      margin: 0 16px 8px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 30px;
+    }
+
+    #road-status.status-idle {
+      background: #1a1d2e;
+      color: #4b5a70;
+      border: 1px solid #2a3050;
+    }
+
+    #road-status.status-loading {
+      background: rgba(59,130,196,0.1);
+      color: #7ab3d4;
+      border: 1px solid #243b55;
+    }
+
+    #road-status.status-ok {
+      background: rgba(32,191,107,0.08);
+      color: #20bf6b;
+      border: 1px solid rgba(32,191,107,0.2);
+    }
+
+    #road-status.status-warn {
+      background: rgba(255,185,0,0.08);
+      color: #f0b232;
+      border: 1px solid rgba(255,185,0,0.2);
+    }
+
+    #road-status.status-error {
+      background: rgba(235,59,90,0.1);
+      color: #eb3b5a;
+      border: 1px solid rgba(235,59,90,0.25);
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { display: inline-block; animation: spin 0.8s linear infinite; }
+
+    /* Auto-refresh toggle */
+    .auto-refresh-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 16px 8px;
+      font-size: 10px;
+      color: #556a8a;
+    }
+
+    /* Road legend */
+    #road-legend {
+      padding: 6px 16px 10px;
+      border-top: 1px solid #1e2438;
+    }
+
+    #road-legend .legend-title {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #3d5070;
+      margin-bottom: 6px;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 2px 0;
+    }
+
+    .legend-line {
+      width: 24px;
+      height: var(--lw, 3px);
+      border-radius: 2px;
+      background: var(--lc);
+      flex-shrink: 0;
+    }
+
+    .legend-line.dashed {
+      background: repeating-linear-gradient(
+        90deg,
+        var(--lc) 0, var(--lc) 5px,
+        transparent 5px, transparent 9px
+      );
+      height: 2px;
+    }
+
+    .legend-text { font-size: 10px; color: #8fa3c0; }
+
+    /* ── Analysis panel (floating) ───────────────────────── */
+    #analysis-panel {
+      position: absolute;
+      bottom: 36px;
+      right: 12px;
+      width: 250px;
+      background: #12141f;
+      border: 1px solid #243b55;
+      border-radius: 10px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+      z-index: 1001;
+      display: none;
+      overflow: hidden;
+    }
+
+    #analysis-panel .ap-header {
+      background: #1e3a5f;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    #analysis-panel .ap-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #7ab3d4;
+    }
+
+    #analysis-panel .ap-close {
+      background: none;
+      border: none;
+      color: #556a8a;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0;
+      line-height: 1;
+    }
+
+    #analysis-panel .ap-close:hover { color: #c8d6e8; }
+
+    #analysis-panel .ap-body { padding: 10px 12px; }
+
+    .proximity-result {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      border-bottom: 1px solid #1e2438;
+      font-size: 11px;
+    }
+
+    .proximity-result:last-child { border-bottom: none; }
+
+    .pr-road {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pr-swatch {
+      width: 14px;
+      height: 3px;
+      border-radius: 2px;
+    }
+
+    .pr-label { color: #c8d6e8; font-weight: 600; }
+    .pr-dist { color: #556a8a; font-weight: 500; font-size: 10px; }
+    .pr-dist strong { color: #7ab3d4; }
 
     /* ── Info panel ─────────────────────────────────────── */
     #info-panel {
       border-top: 1px solid #1e2438;
       padding: 10px 16px;
-      min-height: 60px;
+      flex-shrink: 0;
     }
 
-    #info-panel .info-title {
-      font-size: 11px;
-      font-weight: 700;
-      color: #7ab3d4;
-      margin-bottom: 4px;
-    }
-
-    #info-panel .info-body {
-      font-size: 11px;
-      color: #8fa3c0;
-      line-height: 1.5;
-    }
-
-    #info-panel .info-hint {
-      font-size: 10px;
-      color: #3d5070;
-      margin-top: 4px;
-    }
+    #info-panel .info-title { font-size: 11px; font-weight: 700; color: #7ab3d4; margin-bottom: 4px; }
+    #info-panel .info-body { font-size: 11px; color: #8fa3c0; line-height: 1.5; }
+    #info-panel .info-hint { font-size: 10px; color: #3d5070; margin-top: 4px; display: block; }
 
     /* ── Footer ─────────────────────────────────────────── */
     #sidebar-footer {
@@ -235,13 +488,11 @@
       font-size: 9.5px;
       color: #3d5070;
       line-height: 1.5;
+      flex-shrink: 0;
     }
 
     /* ── Map container ───────────────────────────────────── */
-    #map {
-      flex: 1;
-      position: relative;
-    }
+    #map { flex: 1; position: relative; }
 
     /* ── Leaflet overrides ───────────────────────────────── */
     .leaflet-container { background: #0d1117; }
@@ -256,63 +507,31 @@
     }
 
     .leaflet-popup-tip { background: #12141f; }
-
     .leaflet-popup-content { margin: 14px 16px; }
 
-    .popup-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
+    .popup-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
 
     .popup-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
     }
 
-    .popup-title h3 {
-      font-size: 13px;
-      font-weight: 700;
-      color: #e0e8f8;
-      line-height: 1.3;
-    }
-
-    .popup-title .popup-cat {
-      font-size: 10px;
-      margin-top: 2px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+    .popup-title h3 { font-size: 13px; font-weight: 700; color: #e0e8f8; line-height: 1.3; }
+    .popup-title .popup-cat { font-size: 10px; margin-top: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
     .popup-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 4px 0;
-      border-bottom: 1px solid #1e2438;
-      font-size: 11px;
+      display: flex; justify-content: space-between;
+      padding: 4px 0; border-bottom: 1px solid #1e2438; font-size: 11px;
     }
 
     .popup-row:last-child { border-bottom: none; }
-
     .popup-row .key { color: #556a8a; }
     .popup-row .val { color: #c8d6e8; font-weight: 500; text-align: right; max-width: 160px; }
 
     .status-badge {
-      display: inline-block;
-      padding: 1px 7px;
-      border-radius: 10px;
-      font-size: 9px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
+      display: inline-block; padding: 1px 7px; border-radius: 10px;
+      font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
     }
 
     .status-operational { background: rgba(32,191,107,0.2); color: #20bf6b; }
@@ -320,13 +539,29 @@
     .status-decommissioned { background: rgba(150,150,150,0.2); color: #aaa; }
     .status-closing { background: rgba(235,59,90,0.2); color: #eb3b5a; }
 
+    .popup-analyse-btn {
+      width: 100%;
+      margin-top: 10px;
+      padding: 6px;
+      background: #1e3a5f;
+      border: 1px solid #3b82c4;
+      border-radius: 6px;
+      color: #7ab3d4;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      letter-spacing: 0.3px;
+    }
+
+    .popup-analyse-btn:hover { background: #244872; }
+    .popup-analyse-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
     /* ── Custom markers ─────────────────────────────────── */
     .cni-marker {
       border-radius: 50%;
       border: 2px solid rgba(255,255,255,0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       font-size: 13px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.5);
       transition: transform 0.15s;
@@ -335,27 +570,29 @@
 
     .cni-marker:hover { transform: scale(1.2); }
 
-    /* ── Scale & attribution overrides ──────────────────── */
+    /* ── Scale & attribution ────────────────────────────── */
     .leaflet-control-scale-line {
-      background: rgba(18,20,31,0.85);
-      color: #7ab3d4;
-      border-color: #3b82c4;
-      font-size: 10px;
+      background: rgba(18,20,31,0.85); color: #7ab3d4;
+      border-color: #3b82c4; font-size: 10px;
     }
 
     .leaflet-control-attribution {
       background: rgba(18,20,31,0.85) !important;
-      color: #3d5070 !important;
-      font-size: 9px;
+      color: #3d5070 !important; font-size: 9px;
     }
 
     .leaflet-control-attribution a { color: #556a8a !important; }
+
+    /* ── Standalone toggle switch state ─────────────────── */
+    .toggle-switch[data-on="1"] { background: #3b82c4; }
+    .toggle-switch[data-on="1"]::after { background: white; left: 16px; }
 
     /* ── Responsive ──────────────────────────────────────── */
     @media (max-width: 640px) {
       #sidebar { width: 100%; min-width: 100%; max-height: 50vh; }
       body { flex-direction: column; }
       #map { flex: 1; min-height: 50vh; }
+      #analysis-panel { right: 4px; bottom: 48px; width: calc(100vw - 8px); }
     }
   </style>
 </head>
@@ -370,382 +607,323 @@
     <p>Interactive Infrastructure Map &bull; 2024</p>
   </div>
 
-  <div class="section-label">Basemap</div>
+  <div class="top-section-label">Basemap</div>
   <div id="basemap-selector">
     <button class="basemap-btn active" data-layer="dark">Dark</button>
     <button class="basemap-btn" data-layer="light">Light</button>
-    <button class="basemap-btn" data-layer="satellite">Terrain</button>
+    <button class="basemap-btn" data-layer="terrain">Terrain</button>
   </div>
 
-  <div class="section-label">Infrastructure Layers</div>
-  <div id="layer-list">
-    <!-- Populated by JS -->
-  </div>
+  <!-- Scrollable area -->
+  <div id="sidebar-scroll">
 
-  <div id="quick-controls">
-    <button class="ctrl-btn" id="btn-all">Show All</button>
-    <button class="ctrl-btn" id="btn-none">Hide All</button>
-  </div>
+    <!-- ── Infrastructure section ── -->
+    <div class="section-header" id="infra-header">
+      <span class="sh-label">Infrastructure Layers</span>
+      <span class="sh-arrow">▼</span>
+    </div>
+    <div class="section-body" id="infra-body">
+      <div id="layer-list"></div>
+      <div class="quick-controls">
+        <button class="ctrl-btn" id="btn-all">Show All</button>
+        <button class="ctrl-btn" id="btn-none">Hide All</button>
+      </div>
+    </div>
+
+    <!-- ── Road Network section ── -->
+    <div class="section-header" id="roads-header">
+      <span class="sh-label">Road Network</span>
+      <span class="sh-arrow">▼</span>
+    </div>
+    <div class="section-body" id="roads-body">
+
+      <!-- Master toggle -->
+      <div class="road-master-toggle">
+        <span class="road-toggle-label">
+          <span class="road-icon">🛣️</span> Load road layer
+        </span>
+        <div class="toggle-switch" id="road-master-switch" style="cursor:pointer"></div>
+      </div>
+
+      <!-- Road type checkboxes -->
+      <div class="road-types-grid" id="road-types-grid"></div>
+
+      <!-- Auto-refresh -->
+      <div class="auto-refresh-row">
+        <span>Auto-refresh on map move</span>
+        <div class="toggle-switch" id="auto-refresh-switch" style="cursor:pointer;opacity:0.5"></div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="quick-controls">
+        <button class="ctrl-btn primary-btn" id="btn-fetch-roads" disabled>Fetch Roads</button>
+        <button class="ctrl-btn danger-btn" id="btn-clear-roads" disabled>Clear</button>
+      </div>
+
+      <!-- Status -->
+      <div id="road-status" class="status-idle">
+        <span>Enable road layer to start</span>
+      </div>
+
+      <!-- Legend -->
+      <div id="road-legend" style="display:none">
+        <div class="legend-title">Road Classification</div>
+        <!-- populated by JS -->
+      </div>
+
+    </div><!-- /roads-body -->
+
+    <!-- Spacer at bottom -->
+    <div style="flex:1;min-height:8px"></div>
+
+  </div><!-- /sidebar-scroll -->
 
   <div id="info-panel">
     <div class="info-title">About</div>
     <div class="info-body">
-      Mapping the UK's Critical National Infrastructure across 10 sectors.
-      <span class="info-hint">Click any marker for details. Toggle layers above.</span>
+      95+ CNI sites across 10 sectors. Road network loads from OpenStreetMap via Overpass API.
+      <span class="info-hint">Click a CNI marker → "Analyse Roads" for proximity results.</span>
     </div>
   </div>
 
   <div id="sidebar-footer">
-    Data: publicly available sources &bull; For information only<br>
-    Not for operational or security use
+    Roads: &copy; OpenStreetMap contributors (ODbL) &bull; CNI: public sources<br>
+    For information purposes only &bull; Not for operational use
   </div>
 
 </div>
 
 <!-- ═══════════════════════ MAP ═══════════════════════════ -->
-<div id="map"></div>
+<div id="map">
+  <!-- Floating analysis panel -->
+  <div id="analysis-panel">
+    <div class="ap-header">
+      <span class="ap-title" id="ap-title">Proximity Analysis</span>
+      <button class="ap-close" id="ap-close">&times;</button>
+    </div>
+    <div class="ap-body" id="ap-body"></div>
+  </div>
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
 <script>
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
 // CNI DATA
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
 const CATEGORIES = {
   nuclear: {
-    name: 'Nuclear Energy',
-    icon: '☢️',
-    color: '#ff6b35',
+    name: 'Nuclear Energy', icon: '☢️', color: '#ff6b35',
     sites: [
-      { name: 'Hinkley Point C', lat: 51.208, lng: -3.132,
-        info: { Status: 'Under Construction', Capacity: '3,200 MW', Operator: 'EDF Energy', Type: 'EPR Pressurised Water Reactor', Note: 'First new UK nuclear station since 1995' } },
-      { name: 'Sizewell B', lat: 52.207, lng: 1.617,
-        info: { Status: 'Operational', Capacity: '1,198 MW', Operator: 'EDF Energy', Type: 'Pressurised Water Reactor', Commissioned: '1995' } },
-      { name: 'Heysham 1 & 2', lat: 54.029, lng: -2.922,
-        info: { Status: 'Operational', Capacity: '1,855 MW', Operator: 'EDF Energy', Type: 'Advanced Gas-cooled Reactor', Commissioned: '1983 / 1988' } },
-      { name: 'Torness', lat: 55.968, lng: -2.439,
-        info: { Status: 'Operational', Capacity: '1,205 MW', Operator: 'EDF Energy', Type: 'Advanced Gas-cooled Reactor', Commissioned: '1988' } },
-      { name: 'Dungeness B', lat: 50.913, lng: 0.963,
-        info: { Status: 'Defueling', Capacity: '1,110 MW', Operator: 'EDF Energy', Type: 'Advanced Gas-cooled Reactor', Closed: '2021' } },
-      { name: 'Bradwell (Decommissioning)', lat: 51.733, lng: 0.900,
-        info: { Status: 'Decommissioned', Capacity: '300 MW', Operator: 'NDA / Magnox Ltd', Type: 'Magnox', Closed: '2002' } },
+      { name: 'Hinkley Point C',           lat: 51.208, lng: -3.132, info: { Status: 'Under Construction', Capacity: '3,200 MW', Operator: 'EDF Energy', Type: 'EPR PWR', Note: 'First new UK nuclear station since 1995' } },
+      { name: 'Sizewell B',                lat: 52.207, lng:  1.617, info: { Status: 'Operational',        Capacity: '1,198 MW', Operator: 'EDF Energy', Type: 'PWR', Commissioned: '1995' } },
+      { name: 'Heysham 1 & 2',             lat: 54.029, lng: -2.922, info: { Status: 'Operational',        Capacity: '1,855 MW', Operator: 'EDF Energy', Type: 'AGR', Commissioned: '1983 / 1988' } },
+      { name: 'Torness',                   lat: 55.968, lng: -2.439, info: { Status: 'Operational',        Capacity: '1,205 MW', Operator: 'EDF Energy', Type: 'AGR', Commissioned: '1988' } },
+      { name: 'Dungeness B',               lat: 50.913, lng:  0.963, info: { Status: 'Defueling',          Capacity: '1,110 MW', Operator: 'EDF Energy', Type: 'AGR', Closed: '2021' } },
+      { name: 'Bradwell (Decommissioning)',lat: 51.733, lng:  0.900, info: { Status: 'Decommissioned',     Capacity: '300 MW',   Operator: 'NDA / Magnox Ltd', Type: 'Magnox', Closed: '2002' } },
     ]
   },
-
   energy: {
-    name: 'Power & Gas',
-    icon: '⚡',
-    color: '#f7b731',
+    name: 'Power & Gas', icon: '⚡', color: '#f7b731',
     sites: [
-      { name: 'Drax Power Station', lat: 53.736, lng: -0.991,
-        info: { Status: 'Operational', Capacity: '3,906 MW', Fuel: 'Biomass / Gas', Owner: 'Drax Group', Note: 'UK\'s largest power station' } },
-      { name: 'West Burton A (Gas)', lat: 53.361, lng: -0.808,
-        info: { Status: 'Operational', Capacity: '1,332 MW', Fuel: 'Gas (CCGT)', Operator: 'EDF Energy' } },
-      { name: 'Pembroke Power Station', lat: 51.683, lng: -4.972,
-        info: { Status: 'Operational', Capacity: '2,188 MW', Fuel: 'Gas (CCGT)', Operator: 'RWE', Note: 'Largest gas power station in UK' } },
-      { name: 'Seagreen Offshore Wind', lat: 56.718, lng: -1.985,
-        info: { Status: 'Operational', Capacity: '1,075 MW', Fuel: 'Offshore Wind', Operator: 'SSE / TotalEnergies', Note: 'Scotland\'s largest offshore wind farm' } },
-      { name: 'Hornsea One Offshore Wind', lat: 53.927, lng: 1.841,
-        info: { Status: 'Operational', Capacity: '1,218 MW', Fuel: 'Offshore Wind', Operator: 'Ørsted', Note: 'World\'s largest offshore wind farm' } },
-      { name: 'Hornsea Two Offshore Wind', lat: 54.060, lng: 1.649,
-        info: { Status: 'Operational', Capacity: '1,386 MW', Fuel: 'Offshore Wind', Operator: 'Ørsted' } },
-      { name: 'Grain LNG Terminal', lat: 51.449, lng: 0.724,
-        info: { Status: 'Operational', Capacity: '5.2 bcm/year', Type: 'LNG Import Terminal', Operator: 'National Grid', Note: 'Major LNG import facility for UK gas grid' } },
-      { name: 'Bacton Gas Terminal', lat: 52.868, lng: 1.438,
-        info: { Status: 'Operational', Capacity: 'Multiple interconnectors', Type: 'Gas Terminal', Operator: 'Various', Note: 'UK\'s largest gas terminal; Interconnex, Bacton–Zeebrugge' } },
-      { name: 'Easington Gas Terminal', lat: 53.643, lng: 0.091,
-        info: { Status: 'Operational', Capacity: 'Langeled pipeline', Type: 'Gas Terminal', Operator: 'Equinor/Shell', Note: 'Landfall for Langeled pipeline from Norway' } },
-      { name: 'Dinorwig Pumped Storage', lat: 53.121, lng: -4.121,
-        info: { Status: 'Operational', Capacity: '1,728 MW', Fuel: 'Pumped Hydro', Operator: 'First Hydro (Engie)', Note: 'Electric Mountain — largest pumped storage in UK' } },
-      { name: 'Ffestiniog Pumped Storage', lat: 52.991, lng: -3.985,
-        info: { Status: 'Operational', Capacity: '360 MW', Fuel: 'Pumped Hydro', Operator: 'First Hydro (Engie)' } },
-      { name: 'Longannet (Decommissioned)', lat: 56.056, lng: -3.723,
-        info: { Status: 'Decommissioned', Capacity: '2,400 MW', Fuel: 'Coal', Closed: '2016', Note: 'Former UK\'s largest coal power station' } },
+      { name: 'Drax Power Station',        lat: 53.736, lng: -0.991, info: { Status: 'Operational', Capacity: '3,906 MW', Fuel: 'Biomass / Gas', Owner: 'Drax Group', Note: "UK's largest power station" } },
+      { name: 'West Burton A (Gas)',        lat: 53.361, lng: -0.808, info: { Status: 'Operational', Capacity: '1,332 MW', Fuel: 'Gas (CCGT)', Operator: 'EDF Energy' } },
+      { name: 'Pembroke Power Station',    lat: 51.683, lng: -4.972, info: { Status: 'Operational', Capacity: '2,188 MW', Fuel: 'Gas (CCGT)', Operator: 'RWE', Note: 'Largest gas power station in UK' } },
+      { name: 'Seagreen Offshore Wind',    lat: 56.718, lng: -1.985, info: { Status: 'Operational', Capacity: '1,075 MW', Fuel: 'Offshore Wind', Operator: 'SSE / TotalEnergies' } },
+      { name: 'Hornsea One Offshore Wind', lat: 53.927, lng:  1.841, info: { Status: 'Operational', Capacity: '1,218 MW', Fuel: 'Offshore Wind', Operator: 'Ørsted', Note: "World's largest offshore wind farm" } },
+      { name: 'Hornsea Two Offshore Wind', lat: 54.060, lng:  1.649, info: { Status: 'Operational', Capacity: '1,386 MW', Fuel: 'Offshore Wind', Operator: 'Ørsted' } },
+      { name: 'Grain LNG Terminal',        lat: 51.449, lng:  0.724, info: { Status: 'Operational', Capacity: '5.2 bcm/year', Type: 'LNG Import', Operator: 'National Grid' } },
+      { name: 'Bacton Gas Terminal',       lat: 52.868, lng:  1.438, info: { Status: 'Operational', Capacity: 'Multiple interconnectors', Type: 'Gas Terminal', Operator: 'Various' } },
+      { name: 'Easington Gas Terminal',    lat: 53.643, lng:  0.091, info: { Status: 'Operational', Capacity: 'Langeled pipeline', Type: 'Gas Terminal', Operator: 'Equinor/Shell' } },
+      { name: 'Dinorwig Pumped Storage',   lat: 53.121, lng: -4.121, info: { Status: 'Operational', Capacity: '1,728 MW', Fuel: 'Pumped Hydro', Operator: 'First Hydro (Engie)', Note: 'Largest pumped storage in UK' } },
+      { name: 'Ffestiniog Pumped Storage', lat: 52.991, lng: -3.985, info: { Status: 'Operational', Capacity: '360 MW', Fuel: 'Pumped Hydro', Operator: 'First Hydro (Engie)' } },
+      { name: 'Longannet (Decommissioned)',lat: 56.056, lng: -3.723, info: { Status: 'Decommissioned', Capacity: '2,400 MW', Fuel: 'Coal', Closed: '2016' } },
     ]
   },
-
   airports: {
-    name: 'Major Airports',
-    icon: '✈️',
-    color: '#3867d6',
+    name: 'Major Airports', icon: '✈️', color: '#3867d6',
     sites: [
-      { name: 'London Heathrow (LHR)', lat: 51.477, lng: -0.461,
-        info: { Status: 'Operational', IATA: 'LHR', Passengers: '61.6m (2023)', Runways: 2, Terminal: '5 terminals', Note: 'Busiest airport in UK; 2nd busiest in Europe' } },
-      { name: 'London Gatwick (LGW)', lat: 51.156, lng: -0.179,
-        info: { Status: 'Operational', IATA: 'LGW', Passengers: '40.9m (2023)', Runways: 1, Note: 'World\'s busiest single-runway airport' } },
-      { name: 'Manchester (MAN)', lat: 53.354, lng: -2.275,
-        info: { Status: 'Operational', IATA: 'MAN', Passengers: '28.3m (2023)', Runways: 2, Note: 'Largest airport outside London' } },
-      { name: 'London Stansted (STN)', lat: 51.885, lng: 0.235,
-        info: { Status: 'Operational', IATA: 'STN', Passengers: '28.2m (2023)', Runways: 1 } },
-      { name: 'Edinburgh (EDI)', lat: 55.950, lng: -3.372,
-        info: { Status: 'Operational', IATA: 'EDI', Passengers: '14.7m (2023)', Runways: 1, Note: 'Scotland\'s busiest airport' } },
-      { name: 'London Luton (LTN)', lat: 51.874, lng: -0.368,
-        info: { Status: 'Operational', IATA: 'LTN', Passengers: '16.3m (2023)', Runways: 1 } },
-      { name: 'Birmingham (BHX)', lat: 52.453, lng: -1.748,
-        info: { Status: 'Operational', IATA: 'BHX', Passengers: '12.5m (2023)', Runways: 1 } },
-      { name: 'Glasgow (GLA)', lat: 55.871, lng: -4.433,
-        info: { Status: 'Operational', IATA: 'GLA', Passengers: '9.3m (2023)', Runways: 1 } },
-      { name: 'Bristol (BRS)', lat: 51.382, lng: -2.719,
-        info: { Status: 'Operational', IATA: 'BRS', Passengers: '10.1m (2023)', Runways: 1 } },
-      { name: 'Newcastle (NCL)', lat: 55.037, lng: -1.691,
-        info: { Status: 'Operational', IATA: 'NCL', Passengers: '5.4m (2023)', Runways: 1 } },
-      { name: 'Leeds Bradford (LBA)', lat: 53.866, lng: -1.661,
-        info: { Status: 'Operational', IATA: 'LBA', Passengers: '4.1m (2023)', Runways: 1 } },
-      { name: 'Belfast International (BFS)', lat: 54.657, lng: -6.216,
-        info: { Status: 'Operational', IATA: 'BFS', Passengers: '6.3m (2023)', Runways: 1 } },
-      { name: 'Aberdeen (ABZ)', lat: 57.202, lng: -2.198,
-        info: { Status: 'Operational', IATA: 'ABZ', Passengers: '3.1m (2023)', Runways: 1, Note: 'Major hub for North Sea oil & gas' } },
-      { name: 'Cardiff Wales (CWL)', lat: 51.397, lng: -3.343,
-        info: { Status: 'Operational', IATA: 'CWL', Passengers: '1.6m (2023)', Runways: 1 } },
+      { name: 'London Heathrow (LHR)',    lat: 51.477, lng: -0.461, info: { Status: 'Operational', IATA: 'LHR', Passengers: '61.6m (2023)', Runways: 2, Note: "UK's busiest; 2nd busiest in Europe" } },
+      { name: 'London Gatwick (LGW)',     lat: 51.156, lng: -0.179, info: { Status: 'Operational', IATA: 'LGW', Passengers: '40.9m (2023)', Runways: 1, Note: "World's busiest single-runway airport" } },
+      { name: 'Manchester (MAN)',         lat: 53.354, lng: -2.275, info: { Status: 'Operational', IATA: 'MAN', Passengers: '28.3m (2023)', Runways: 2 } },
+      { name: 'London Stansted (STN)',    lat: 51.885, lng:  0.235, info: { Status: 'Operational', IATA: 'STN', Passengers: '28.2m (2023)', Runways: 1 } },
+      { name: 'Edinburgh (EDI)',          lat: 55.950, lng: -3.372, info: { Status: 'Operational', IATA: 'EDI', Passengers: '14.7m (2023)', Runways: 1 } },
+      { name: 'London Luton (LTN)',       lat: 51.874, lng: -0.368, info: { Status: 'Operational', IATA: 'LTN', Passengers: '16.3m (2023)', Runways: 1 } },
+      { name: 'Birmingham (BHX)',         lat: 52.453, lng: -1.748, info: { Status: 'Operational', IATA: 'BHX', Passengers: '12.5m (2023)', Runways: 1 } },
+      { name: 'Glasgow (GLA)',            lat: 55.871, lng: -4.433, info: { Status: 'Operational', IATA: 'GLA', Passengers: '9.3m (2023)',  Runways: 1 } },
+      { name: 'Bristol (BRS)',            lat: 51.382, lng: -2.719, info: { Status: 'Operational', IATA: 'BRS', Passengers: '10.1m (2023)', Runways: 1 } },
+      { name: 'Newcastle (NCL)',          lat: 55.037, lng: -1.691, info: { Status: 'Operational', IATA: 'NCL', Passengers: '5.4m (2023)',  Runways: 1 } },
+      { name: 'Leeds Bradford (LBA)',     lat: 53.866, lng: -1.661, info: { Status: 'Operational', IATA: 'LBA', Passengers: '4.1m (2023)',  Runways: 1 } },
+      { name: 'Belfast International (BFS)', lat: 54.657, lng: -6.216, info: { Status: 'Operational', IATA: 'BFS', Passengers: '6.3m (2023)', Runways: 1 } },
+      { name: 'Aberdeen (ABZ)',           lat: 57.202, lng: -2.198, info: { Status: 'Operational', IATA: 'ABZ', Passengers: '3.1m (2023)',  Runways: 1, Note: 'Hub for North Sea oil & gas' } },
+      { name: 'Cardiff Wales (CWL)',      lat: 51.397, lng: -3.343, info: { Status: 'Operational', IATA: 'CWL', Passengers: '1.6m (2023)',  Runways: 1 } },
     ]
   },
-
   ports: {
-    name: 'Ports & Maritime',
-    icon: '⚓',
-    color: '#0fb9b1',
+    name: 'Ports & Maritime', icon: '⚓', color: '#0fb9b1',
     sites: [
-      { name: 'Port of Felixstowe', lat: 51.960, lng: 1.351,
-        info: { Status: 'Operational', Type: 'Container', Throughput: '3.7m TEU/year', Owner: 'Hutchison Ports', Note: 'UK\'s busiest container port' } },
-      { name: 'Port of Southampton', lat: 50.898, lng: -1.404,
-        info: { Status: 'Operational', Type: 'Container / Cruise', Throughput: '2.1m TEU/year', Operator: 'ABP' } },
-      { name: 'Port of Dover', lat: 51.122, lng: 1.330,
-        info: { Status: 'Operational', Type: 'RoRo / Ferry', Throughput: '~12,000 lorries/day', Note: 'UK\'s busiest ferry port; gateway to Europe' } },
-      { name: 'Port of London (Tilbury)', lat: 51.459, lng: 0.362,
-        info: { Status: 'Operational', Type: 'Multi-cargo', Throughput: '55m tonnes/year', Operator: 'PLA / Forth Ports' } },
-      { name: 'Port of Liverpool', lat: 53.395, lng: -3.011,
-        info: { Status: 'Operational', Type: 'Container', Throughput: '800,000 TEU/year', Operator: 'Peel Ports' } },
-      { name: 'Immingham (Humber)', lat: 53.629, lng: -0.188,
-        info: { Status: 'Operational', Type: 'Bulk / General cargo', Throughput: '50m tonnes/year', Operator: 'ABP', Note: 'UK\'s largest port by tonnage' } },
-      { name: 'Milford Haven Port', lat: 51.713, lng: -5.028,
-        info: { Status: 'Operational', Type: 'Energy / LNG', Throughput: '~30% of UK gas imports', Operator: 'Milford Haven Port Authority', Note: 'Dragon LNG & South Hook LNG terminals' } },
-      { name: 'Port of Tyne', lat: 54.994, lng: -1.440,
-        info: { Status: 'Operational', Type: 'RoRo / Multi-cargo', Throughput: '4.5m tonnes/year', Operator: 'Port of Tyne Authority' } },
-      { name: 'Port of Bristol (Avonmouth)', lat: 51.504, lng: -2.700,
-        info: { Status: 'Operational', Type: 'Multi-cargo', Throughput: '10m tonnes/year', Operator: 'Bristol Port Company' } },
-      { name: 'Channel Tunnel (Folkestone)', lat: 51.094, lng: 1.141,
-        info: { Status: 'Operational', Type: 'Rail tunnel', Throughput: '21m passengers/year', Operator: 'Getlink', Note: 'Fixed link to France; 50.5 km undersea' } },
-      { name: 'Grangemouth Port', lat: 56.016, lng: -3.703,
-        info: { Status: 'Operational', Type: 'Container / Petrochemical', Throughput: '9m tonnes/year', Operator: 'Forth Ports', Note: 'Linked to major Scottish refinery' } },
+      { name: 'Port of Felixstowe',          lat: 51.960, lng:  1.351, info: { Status: 'Operational', Type: 'Container',       Throughput: '3.7m TEU/year',     Note: "UK's busiest container port" } },
+      { name: 'Port of Southampton',         lat: 50.898, lng: -1.404, info: { Status: 'Operational', Type: 'Container/Cruise', Throughput: '2.1m TEU/year' } },
+      { name: 'Port of Dover',               lat: 51.122, lng:  1.330, info: { Status: 'Operational', Type: 'RoRo / Ferry',     Throughput: '~12,000 lorries/day', Note: "UK's busiest ferry port" } },
+      { name: 'Port of London (Tilbury)',    lat: 51.459, lng:  0.362, info: { Status: 'Operational', Type: 'Multi-cargo',      Throughput: '55m tonnes/year' } },
+      { name: 'Port of Liverpool',           lat: 53.395, lng: -3.011, info: { Status: 'Operational', Type: 'Container',        Throughput: '800,000 TEU/year' } },
+      { name: 'Immingham (Humber)',          lat: 53.629, lng: -0.188, info: { Status: 'Operational', Type: 'Bulk / General',   Throughput: '50m tonnes/year', Note: "UK's largest port by tonnage" } },
+      { name: 'Milford Haven Port',          lat: 51.713, lng: -5.028, info: { Status: 'Operational', Type: 'Energy / LNG',     Throughput: '~30% UK gas imports' } },
+      { name: 'Port of Tyne',               lat: 54.994, lng: -1.440, info: { Status: 'Operational', Type: 'RoRo / Multi',     Throughput: '4.5m tonnes/year' } },
+      { name: 'Port of Bristol (Avonmouth)',lat: 51.504, lng: -2.700, info: { Status: 'Operational', Type: 'Multi-cargo',      Throughput: '10m tonnes/year' } },
+      { name: 'Channel Tunnel (Folkestone)',lat: 51.094, lng:  1.141, info: { Status: 'Operational', Type: 'Rail Tunnel',      Throughput: '21m passengers/year', Note: '50.5 km undersea' } },
+      { name: 'Grangemouth Port',           lat: 56.016, lng: -3.703, info: { Status: 'Operational', Type: 'Container / Petrochem', Throughput: '9m tonnes/year' } },
     ]
   },
-
   water: {
-    name: 'Water Infrastructure',
-    icon: '💧',
-    color: '#45aaf2',
+    name: 'Water Infrastructure', icon: '💧', color: '#45aaf2',
     sites: [
-      { name: 'Kielder Reservoir', lat: 55.183, lng: -2.519,
-        info: { Status: 'Operational', Type: 'Reservoir', Capacity: '200 billion litres', Region: 'North East England', Note: 'Largest man-made lake in Northern Europe by volume' } },
-      { name: 'Rutland Water', lat: 52.651, lng: -0.625,
-        info: { Status: 'Operational', Type: 'Reservoir', Capacity: '124 billion litres', Operator: 'Anglian Water', Note: 'Largest man-made reservoir by area in England' } },
-      { name: 'Grafham Water', lat: 52.275, lng: -0.327,
-        info: { Status: 'Operational', Type: 'Reservoir', Capacity: '59 billion litres', Operator: 'Anglian Water' } },
-      { name: 'Thirlmere', lat: 54.548, lng: -3.058,
-        info: { Status: 'Operational', Type: 'Reservoir', Capacity: '41 billion litres', Operator: 'United Utilities', Note: 'Gravity-fed supply to Manchester' } },
-      { name: 'Haweswater', lat: 54.519, lng: -2.741,
-        info: { Status: 'Operational', Type: 'Reservoir', Capacity: '85 billion litres', Operator: 'United Utilities' } },
-      { name: 'Elan Valley Reservoirs', lat: 52.285, lng: -3.674,
-        info: { Status: 'Operational', Type: 'Reservoir system (6)', Capacity: '100 billion litres', Operator: 'Severn Trent / Welsh Water', Note: 'Gravity-fed supply to Birmingham' } },
-      { name: 'Vyrnwy Reservoir', lat: 52.765, lng: -3.579,
-        info: { Status: 'Operational', Type: 'Reservoir', Capacity: '57 billion litres', Operator: 'Severn Trent', Note: 'Supplies Liverpool; first large masonry dam in UK' } },
-      { name: 'Loch Katrine', lat: 56.232, lng: -4.519,
-        info: { Status: 'Operational', Type: 'Natural loch / Supply', Capacity: 'Main Glasgow supply', Operator: 'Scottish Water' } },
-      { name: 'Abberton Reservoir', lat: 51.813, lng: 0.866,
-        info: { Status: 'Operational', Type: 'Reservoir', Capacity: '41 billion litres', Operator: 'Essex & Suffolk Water', Note: 'One of UK\'s largest lowland reservoirs' } },
-      { name: 'Clatworthy Reservoir', lat: 51.068, lng: -3.351,
-        info: { Status: 'Operational', Type: 'Reservoir', Capacity: '7.5 billion litres', Operator: 'Wessex Water' } },
-      { name: 'Bewl Water', lat: 51.070, lng: 0.388,
-        info: { Status: 'Operational', Type: 'Reservoir', Capacity: '31 billion litres', Operator: 'South East Water', Note: 'Largest reservoir in South East England' } },
+      { name: 'Kielder Reservoir',     lat: 55.183, lng: -2.519, info: { Status: 'Operational', Type: 'Reservoir', Capacity: '200 billion litres', Note: 'Largest man-made lake in Northern Europe' } },
+      { name: 'Rutland Water',         lat: 52.651, lng: -0.625, info: { Status: 'Operational', Type: 'Reservoir', Capacity: '124 billion litres', Operator: 'Anglian Water' } },
+      { name: 'Grafham Water',         lat: 52.275, lng: -0.327, info: { Status: 'Operational', Type: 'Reservoir', Capacity: '59 billion litres', Operator: 'Anglian Water' } },
+      { name: 'Thirlmere',             lat: 54.548, lng: -3.058, info: { Status: 'Operational', Type: 'Reservoir', Capacity: '41 billion litres', Operator: 'United Utilities' } },
+      { name: 'Haweswater',            lat: 54.519, lng: -2.741, info: { Status: 'Operational', Type: 'Reservoir', Capacity: '85 billion litres', Operator: 'United Utilities' } },
+      { name: 'Elan Valley Reservoirs',lat: 52.285, lng: -3.674, info: { Status: 'Operational', Type: 'Reservoir system (6)', Capacity: '100 billion litres' } },
+      { name: 'Vyrnwy Reservoir',      lat: 52.765, lng: -3.579, info: { Status: 'Operational', Type: 'Reservoir', Capacity: '57 billion litres', Note: 'Supplies Liverpool' } },
+      { name: 'Loch Katrine',          lat: 56.232, lng: -4.519, info: { Status: 'Operational', Type: 'Natural loch', Capacity: 'Main Glasgow supply', Operator: 'Scottish Water' } },
+      { name: 'Abberton Reservoir',    lat: 51.813, lng:  0.866, info: { Status: 'Operational', Type: 'Reservoir', Capacity: '41 billion litres' } },
+      { name: 'Clatworthy Reservoir',  lat: 51.068, lng: -3.351, info: { Status: 'Operational', Type: 'Reservoir', Capacity: '7.5 billion litres', Operator: 'Wessex Water' } },
+      { name: 'Bewl Water',            lat: 51.070, lng:  0.388, info: { Status: 'Operational', Type: 'Reservoir', Capacity: '31 billion litres', Note: 'Largest reservoir in SE England' } },
     ]
   },
-
   communications: {
-    name: 'Communications & Data',
-    icon: '📡',
-    color: '#a55eea',
+    name: 'Communications & Data', icon: '📡', color: '#a55eea',
     sites: [
-      { name: 'BT Tower, London', lat: 51.521, lng: -0.139,
-        info: { Status: 'Operational', Type: 'Microwave relay tower', Operator: 'BT Group', Height: '177m', Note: 'Key node in UK national telecoms backbone' } },
-      { name: 'Telehouse North, London', lat: 51.508, lng: -0.013,
-        info: { Status: 'Operational', Type: 'Data Centre', Operator: 'KDDI', Note: 'Major internet exchange; hosts LINX' } },
-      { name: 'Equinix LD4, Slough', lat: 51.511, lng: -0.594,
-        info: { Status: 'Operational', Type: 'Data Centre', Operator: 'Equinix', Note: 'Largest data centre campus in UK' } },
-      { name: 'Goonhilly Earth Station', lat: 50.051, lng: -5.183,
-        info: { Status: 'Operational', Type: 'Satellite communications', Operator: 'Goonhilly Earth Station Ltd', Note: 'Deep Space Network; lunar communications' } },
-      { name: 'Madley Communications', lat: 52.084, lng: -2.862,
-        info: { Status: 'Operational', Type: 'Satellite uplink', Operator: 'Inmarsat', Note: 'Major Inmarsat satellite ground station' } },
-      { name: 'GCHQ Cheltenham (Doughnut)', lat: 51.897, lng: -2.094,
-        info: { Status: 'Operational', Type: 'Signals Intelligence / Cybersecurity', Operator: 'HMGCC / NCSC', Note: 'UK\'s primary SIGINT agency; hosts NCSC' } },
-      { name: 'Corsham Underground', lat: 51.432, lng: -2.195,
-        info: { Status: 'Operational', Type: 'Government secure network', Operator: 'Cabinet Office / MOD', Note: 'Burlington/PINDAR network node; nuclear bunker' } },
-      { name: 'BT Adastral Park, Martlesham', lat: 52.060, lng: 1.244,
-        info: { Status: 'Operational', Type: 'R&D / Network hub', Operator: 'BT Group', Note: 'BT\'s main R&D facility; major network exchange' } },
-      { name: 'National Cyber Security Centre', lat: 51.499, lng: -0.140,
-        info: { Status: 'Operational', Type: 'Cybersecurity', Operator: 'GCHQ / NCSC', Note: 'Defends UK\'s critical systems from cyber threats' } },
+      { name: 'BT Tower, London',              lat: 51.521, lng: -0.139, info: { Status: 'Operational', Type: 'Microwave relay', Operator: 'BT Group', Height: '177m' } },
+      { name: 'Telehouse North, London',       lat: 51.508, lng: -0.013, info: { Status: 'Operational', Type: 'Data Centre', Operator: 'KDDI', Note: 'Hosts LINX internet exchange' } },
+      { name: 'Equinix LD4, Slough',           lat: 51.511, lng: -0.594, info: { Status: 'Operational', Type: 'Data Centre', Operator: 'Equinix', Note: "Largest data centre campus in UK" } },
+      { name: 'Goonhilly Earth Station',       lat: 50.051, lng: -5.183, info: { Status: 'Operational', Type: 'Satellite comms', Operator: 'Goonhilly Networks' } },
+      { name: 'Madley Communications',         lat: 52.084, lng: -2.862, info: { Status: 'Operational', Type: 'Satellite uplink', Operator: 'Inmarsat' } },
+      { name: 'GCHQ Cheltenham (Doughnut)',    lat: 51.897, lng: -2.094, info: { Status: 'Operational', Type: 'SIGINT / Cybersecurity', Operator: 'GCHQ / NCSC' } },
+      { name: 'Corsham Underground',           lat: 51.432, lng: -2.195, info: { Status: 'Operational', Type: 'Govt secure network', Operator: 'Cabinet Office / MOD' } },
+      { name: 'BT Adastral Park, Martlesham', lat: 52.060, lng:  1.244, info: { Status: 'Operational', Type: 'R&D / Network hub', Operator: 'BT Group' } },
+      { name: 'National Cyber Security Centre',lat: 51.499, lng: -0.140, info: { Status: 'Operational', Type: 'Cybersecurity', Operator: 'GCHQ / NCSC' } },
     ]
   },
-
   finance: {
-    name: 'Financial Infrastructure',
-    icon: '🏦',
-    color: '#20bf6b',
+    name: 'Financial Infrastructure', icon: '🏦', color: '#20bf6b',
     sites: [
-      { name: 'Bank of England', lat: 51.514, lng: -0.089,
-        info: { Status: 'Operational', Type: 'Central Bank', Founded: '1694', Note: 'UK monetary policy; lender of last resort; gold vaults' } },
-      { name: 'City of London (Square Mile)', lat: 51.515, lng: -0.095,
-        info: { Status: 'Operational', Type: 'Financial Centre', GDP: '£65bn+/year', Note: 'Global financial hub; 500,000+ daily workers' } },
-      { name: 'Canary Wharf', lat: 51.503, lng: -0.020,
-        info: { Status: 'Operational', Type: 'Financial District', Note: 'UK\'s second major financial district; major bank HQs' } },
-      { name: "Lloyd's of London", lat: 51.514, lng: -0.082,
-        info: { Status: 'Operational', Type: 'Insurance Market', Founded: '1688', Note: 'World\'s leading specialist insurance market' } },
-      { name: 'London Stock Exchange', lat: 51.514, lng: -0.099,
-        info: { Status: 'Operational', Type: 'Stock Exchange', Founded: '1801', 'Market Cap': '£3.8 trillion', Note: 'One of world\'s largest stock exchanges' } },
-      { name: 'CHAPS Settlement (Bank of England)', lat: 51.514, lng: -0.088,
-        info: { Status: 'Operational', Type: 'Payment infrastructure', Volume: '£400bn+/day', Note: 'UK high-value payment system' } },
+      { name: 'Bank of England',              lat: 51.514, lng: -0.089, info: { Status: 'Operational', Type: 'Central Bank', Founded: '1694' } },
+      { name: 'City of London (Square Mile)', lat: 51.515, lng: -0.095, info: { Status: 'Operational', Type: 'Financial Centre', Note: 'Global financial hub; 500k+ daily workers' } },
+      { name: 'Canary Wharf',                 lat: 51.503, lng: -0.020, info: { Status: 'Operational', Type: 'Financial District' } },
+      { name: "Lloyd's of London",            lat: 51.514, lng: -0.082, info: { Status: 'Operational', Type: 'Insurance Market', Founded: '1688' } },
+      { name: 'London Stock Exchange',        lat: 51.514, lng: -0.099, info: { Status: 'Operational', Type: 'Stock Exchange', Founded: '1801', 'Market Cap': '£3.8 trillion' } },
+      { name: 'CHAPS Settlement (BoE)',        lat: 51.514, lng: -0.088, info: { Status: 'Operational', Type: 'Payment infrastructure', Volume: '£400bn+/day' } },
     ]
   },
-
   defence: {
-    name: 'Defence & Security',
-    icon: '🛡️',
-    color: '#eb3b5a',
+    name: 'Defence & Security', icon: '🛡️', color: '#eb3b5a',
     sites: [
-      { name: 'HMNB Clyde (Faslane)', lat: 56.036, lng: -4.816,
-        info: { Status: 'Operational', Type: 'Naval Base', Role: 'Trident submarine base', Note: 'Home of UK\'s nuclear deterrent; Vanguard-class submarines' } },
-      { name: 'HMNB Portsmouth', lat: 50.800, lng: -1.110,
-        info: { Status: 'Operational', Type: 'Naval Base', Role: 'Surface fleet HQ', Note: 'Largest naval base in Western Europe' } },
-      { name: 'HMNB Devonport', lat: 50.369, lng: -4.178,
-        info: { Status: 'Operational', Type: 'Naval Base', Role: 'Submarine refit', Note: 'Largest naval base in Western Europe by land area' } },
-      { name: 'RAF Brize Norton', lat: 51.750, lng: -1.579,
-        info: { Status: 'Operational', Type: 'RAF Station', Role: 'Air Transport / Refuelling', Note: 'Largest RAF station; A400M, Voyager, C-17' } },
-      { name: 'RAF Lossiemouth', lat: 57.706, lng: -3.339,
-        info: { Status: 'Operational', Type: 'RAF Station', Role: 'Quick Reaction Alert (North)', Note: 'Typhoon QRA for Northern UK airspace' } },
-      { name: 'RAF Coningsby', lat: 53.093, lng: -0.166,
-        info: { Status: 'Operational', Type: 'RAF Station', Role: 'Quick Reaction Alert (South)', Note: 'Typhoon / F-35B operations; QRA for Southern UK' } },
-      { name: 'AWE Aldermaston', lat: 51.378, lng: -1.157,
-        info: { Status: 'Operational', Type: 'Nuclear Weapons Establishment', Role: 'Warhead design & manufacture', Operator: 'AWE plc (MOD)', Note: 'Design and maintenance of UK nuclear warheads' } },
-      { name: 'Porton Down (DSTL)', lat: 51.127, lng: -1.728,
-        info: { Status: 'Operational', Type: 'Defence Science', Role: 'CBRN research', Operator: 'DSTL / MOD', Note: 'World\'s oldest CBRN research facility' } },
-      { name: 'Boscombe Down (MoD)', lat: 51.156, lng: -1.748,
-        info: { Status: 'Operational', Type: 'Aircraft Testing', Role: 'Military test & evaluation', Operator: 'QinetiQ / MOD' } },
-      { name: 'GCHQ Bude (GCHQ Composite Signals Organisation)', lat: 50.785, lng: -4.556,
-        info: { Status: 'Operational', Type: 'Signals Intelligence', Role: 'SIGINT collection', Operator: 'GCHQ', Note: 'Part of UKUSA ECHELON network' } },
+      { name: 'HMNB Clyde (Faslane)',    lat: 56.036, lng: -4.816, info: { Status: 'Operational', Type: 'Naval Base', Role: 'Trident submarine base' } },
+      { name: 'HMNB Portsmouth',         lat: 50.800, lng: -1.110, info: { Status: 'Operational', Type: 'Naval Base', Role: 'Surface fleet HQ' } },
+      { name: 'HMNB Devonport',          lat: 50.369, lng: -4.178, info: { Status: 'Operational', Type: 'Naval Base', Role: 'Submarine refit' } },
+      { name: 'RAF Brize Norton',        lat: 51.750, lng: -1.579, info: { Status: 'Operational', Type: 'RAF Station', Role: 'Air Transport / Refuelling' } },
+      { name: 'RAF Lossiemouth',         lat: 57.706, lng: -3.339, info: { Status: 'Operational', Type: 'RAF Station', Role: 'QRA North' } },
+      { name: 'RAF Coningsby',           lat: 53.093, lng: -0.166, info: { Status: 'Operational', Type: 'RAF Station', Role: 'QRA South' } },
+      { name: 'AWE Aldermaston',         lat: 51.378, lng: -1.157, info: { Status: 'Operational', Type: 'Nuclear Weapons Est.', Role: 'Warhead design & manufacture' } },
+      { name: 'Porton Down (DSTL)',      lat: 51.127, lng: -1.728, info: { Status: 'Operational', Type: 'Defence Science', Role: 'CBRN research' } },
+      { name: 'Boscombe Down (MoD)',     lat: 51.156, lng: -1.748, info: { Status: 'Operational', Type: 'Aircraft Testing', Role: 'Military test & evaluation' } },
+      { name: 'GCHQ Bude (CSO)',         lat: 50.785, lng: -4.556, info: { Status: 'Operational', Type: 'SIGINT', Role: 'SIGINT collection (ECHELON)' } },
     ]
   },
-
   health: {
-    name: 'Major Hospitals',
-    icon: '🏥',
-    color: '#fc5c65',
+    name: 'Major Hospitals', icon: '🏥', color: '#fc5c65',
     sites: [
-      { name: "St Thomas' Hospital, London", lat: 51.499, lng: -0.119,
-        info: { Status: 'Operational', Trust: 'Guy\'s & St Thomas\'', Type: 'Major Trauma Centre', Beds: '830', Note: 'NHS flagship; opposite Houses of Parliament' } },
-      { name: 'University College Hospital, London', lat: 51.524, lng: -0.136,
-        info: { Status: 'Operational', Trust: 'UCLH NHS Foundation', Type: 'Major Trauma Centre', Beds: '655' } },
-      { name: 'The Royal London Hospital', lat: 51.519, lng: -0.059,
-        info: { Status: 'Operational', Trust: 'Barts Health', Type: 'Major Trauma Centre', Beds: '1,000', Note: 'Largest hospital in the UK' } },
-      { name: 'Manchester Royal Infirmary', lat: 53.462, lng: -2.228,
-        info: { Status: 'Operational', Trust: 'MFT', Type: 'Major Trauma Centre', Beds: '740' } },
-      { name: 'Queen Elizabeth Hospital, Birmingham', lat: 52.450, lng: -1.942,
-        info: { Status: 'Operational', Trust: 'University Hospitals Birmingham', Type: 'Major Trauma Centre', Beds: '1,213', Note: 'Largest teaching hospital in Europe' } },
-      { name: 'Leeds General Infirmary', lat: 53.802, lng: -1.550,
-        info: { Status: 'Operational', Trust: 'Leeds Teaching Hospitals', Type: 'Major Trauma Centre', Beds: '1,000' } },
-      { name: 'Newcastle RVI', lat: 54.982, lng: -1.618,
-        info: { Status: 'Operational', Trust: 'Newcastle upon Tyne Hospitals', Type: 'Major Trauma Centre', Beds: '1,200' } },
-      { name: 'Western General, Edinburgh', lat: 55.961, lng: -3.231,
-        info: { Status: 'Operational', Trust: 'NHS Lothian', Type: 'Major Hospital', Beds: '827' } },
-      { name: 'Glasgow Royal Infirmary', lat: 55.861, lng: -4.235,
-        info: { Status: 'Operational', Trust: 'NHS Greater Glasgow & Clyde', Type: 'Major Hospital', Beds: '1,000' } },
-      { name: 'Royal Victoria Hospital, Belfast', lat: 54.588, lng: -5.973,
-        info: { Status: 'Operational', Trust: 'Belfast HSC', Type: 'Major Hospital', Beds: '750' } },
-      { name: 'Derriford Hospital, Plymouth', lat: 50.417, lng: -4.115,
-        info: { Status: 'Operational', Trust: 'University Hospitals Plymouth', Type: 'Major Hospital', Beds: '1,068', Note: 'Largest hospital in South West England' } },
-      { name: 'University Hospital Wales, Cardiff', lat: 51.507, lng: -3.190,
-        info: { Status: 'Operational', Trust: 'Cardiff & Vale UHB', Type: 'Major Hospital', Beds: '1,200', Note: 'Wales\' largest hospital' } },
+      { name: "St Thomas' Hospital, London",     lat: 51.499, lng: -0.119, info: { Status: 'Operational', Type: 'Major Trauma Centre', Beds: '830' } },
+      { name: 'UCH London',                      lat: 51.524, lng: -0.136, info: { Status: 'Operational', Type: 'Major Trauma Centre', Beds: '655' } },
+      { name: 'The Royal London Hospital',       lat: 51.519, lng: -0.059, info: { Status: 'Operational', Type: 'Major Trauma Centre', Beds: '1,000', Note: "Largest hospital in the UK" } },
+      { name: 'Manchester Royal Infirmary',      lat: 53.462, lng: -2.228, info: { Status: 'Operational', Type: 'Major Trauma Centre', Beds: '740' } },
+      { name: 'QE Hospital, Birmingham',         lat: 52.450, lng: -1.942, info: { Status: 'Operational', Type: 'Major Trauma Centre', Beds: '1,213', Note: 'Largest teaching hospital in Europe' } },
+      { name: 'Leeds General Infirmary',         lat: 53.802, lng: -1.550, info: { Status: 'Operational', Type: 'Major Trauma Centre', Beds: '1,000' } },
+      { name: 'Newcastle RVI',                   lat: 54.982, lng: -1.618, info: { Status: 'Operational', Type: 'Major Trauma Centre', Beds: '1,200' } },
+      { name: 'Western General, Edinburgh',      lat: 55.961, lng: -3.231, info: { Status: 'Operational', Type: 'Major Hospital', Beds: '827' } },
+      { name: 'Glasgow Royal Infirmary',         lat: 55.861, lng: -4.235, info: { Status: 'Operational', Type: 'Major Hospital', Beds: '1,000' } },
+      { name: 'Royal Victoria Hospital, Belfast',lat: 54.588, lng: -5.973, info: { Status: 'Operational', Type: 'Major Hospital', Beds: '750' } },
+      { name: 'Derriford Hospital, Plymouth',    lat: 50.417, lng: -4.115, info: { Status: 'Operational', Type: 'Major Hospital', Beds: '1,068' } },
+      { name: 'University Hospital Wales',       lat: 51.507, lng: -3.190, info: { Status: 'Operational', Type: 'Major Hospital', Beds: '1,200', Note: "Wales' largest hospital" } },
     ]
   },
-
   atc: {
-    name: 'Air Traffic Control',
-    icon: '🗼',
-    color: '#fd9644',
+    name: 'Air Traffic Control', icon: '🗼', color: '#fd9644',
     sites: [
-      { name: 'NATS Swanwick (LACC)', lat: 50.874, lng: -1.316,
-        info: { Status: 'Operational', Type: 'En-route ATC Centre', Role: 'UK upper airspace', Operator: 'NATS', Note: 'Controls 2m+ flights/year; largest ATC centre in UK' } },
-      { name: 'NATS Prestwick (OACC)', lat: 55.509, lng: -4.587,
-        info: { Status: 'Operational', Type: 'Oceanic ATC Centre', Role: 'North Atlantic airspace (Shanwick)', Operator: 'NATS', Note: 'Controls ~450,000 transatlantic flights/year' } },
-      { name: 'London Terminal Control (TC)', lat: 51.477, lng: -0.461,
-        info: { Status: 'Operational', Type: 'Terminal ATC', Role: 'London TMA approaches', Operator: 'NATS / HAL', Note: 'Manages approach to 5 SE England airports' } },
-      { name: 'Manchester ATCC', lat: 53.354, lng: -2.275,
-        info: { Status: 'Operational', Type: 'Terminal ATC', Role: 'Manchester TMA', Operator: 'NATS' } },
-      { name: 'Edinburgh ATC', lat: 55.950, lng: -3.372,
-        info: { Status: 'Operational', Type: 'Terminal ATC', Role: 'Edinburgh / Scottish TMA', Operator: 'NATS' } },
+      { name: 'NATS Swanwick (LACC)',    lat: 50.874, lng: -1.316, info: { Status: 'Operational', Type: 'En-route ATC', Role: 'UK upper airspace', Operator: 'NATS' } },
+      { name: 'NATS Prestwick (OACC)',   lat: 55.509, lng: -4.587, info: { Status: 'Operational', Type: 'Oceanic ATC', Role: 'North Atlantic (Shanwick)', Operator: 'NATS' } },
+      { name: 'London Terminal Control', lat: 51.477, lng: -0.461, info: { Status: 'Operational', Type: 'Terminal ATC', Role: 'London TMA', Operator: 'NATS / HAL' } },
+      { name: 'Manchester ATCC',         lat: 53.354, lng: -2.275, info: { Status: 'Operational', Type: 'Terminal ATC', Role: 'Manchester TMA', Operator: 'NATS' } },
+      { name: 'Edinburgh ATC',           lat: 55.950, lng: -3.372, info: { Status: 'Operational', Type: 'Terminal ATC', Role: 'Scottish TMA', Operator: 'NATS' } },
     ]
   },
 };
 
-// ──────────────────────────────────────────────────────────
-// MAP INITIALISATION
-// ──────────────────────────────────────────────────────────
-const map = L.map('map', {
-  center: [54.5, -3.0],
-  zoom: 6,
-  zoomControl: true,
-});
+// ══════════════════════════════════════════════════════════
+// ROAD TYPE CONFIGURATION
+// ══════════════════════════════════════════════════════════
+// Display groups – each entry represents one checkbox in the UI.
+// `types` lists the OSM highway values included when this is selected.
+const ROAD_GROUPS = [
+  { id: 'motorway',     label: 'Motorway',      color: '#74c0fc', weight: 5,   types: ['motorway', 'motorway_link'],      defaultOn: true  },
+  { id: 'trunk',        label: 'Trunk (A dual)', color: '#51cf66', weight: 4,  types: ['trunk', 'trunk_link'],            defaultOn: true  },
+  { id: 'primary',      label: 'Primary (A)',   color: '#fcc419', weight: 3,   types: ['primary', 'primary_link'],        defaultOn: true  },
+  { id: 'secondary',    label: 'Secondary (B)', color: '#ff922b', weight: 2.5, types: ['secondary', 'secondary_link'],    defaultOn: true  },
+  { id: 'tertiary',     label: 'Tertiary (C)',  color: '#adb5bd', weight: 1.5, types: ['tertiary', 'tertiary_link'],      defaultOn: true  },
+  { id: 'unclassified', label: 'Unclassified',  color: '#6b7280', weight: 1.2, types: ['unclassified'],                   defaultOn: false },
+  { id: 'residential',  label: 'Residential',   color: '#4b5563', weight: 1,   types: ['residential', 'living_street'],   defaultOn: false },
+  { id: 'service',      label: 'Service',       color: '#374151', weight: 0.8, types: ['service'],                        defaultOn: false },
+  { id: 'track',        label: 'Track / Lane',  color: '#8B7355', weight: 1,   types: ['track'],                          defaultOn: false, dash: '5,5' },
+];
 
+// Fast lookup: OSM highway value → road group config
+const ROAD_TYPE_MAP = {};
+ROAD_GROUPS.forEach(g => g.types.forEach(t => { ROAD_TYPE_MAP[t] = g; }));
+
+// ══════════════════════════════════════════════════════════
+// MAP SETUP
+// ══════════════════════════════════════════════════════════
+const map = L.map('map', { center: [54.5, -3.0], zoom: 6, zoomControl: true });
 map.zoomControl.setPosition('topright');
 L.control.scale({ metric: true, imperial: true }).addTo(map);
 
-// ── Tile layers ───────────────────────────────────────────
 const basemaps = {
-  dark: L.tileLayer(
-    'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    { attribution: '&copy; OpenStreetMap contributors &copy; CartoDB', maxZoom: 19 }
-  ),
-  light: L.tileLayer(
-    'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-    { attribution: '&copy; OpenStreetMap contributors &copy; CartoDB', maxZoom: 19 }
-  ),
-  satellite: L.tileLayer(
-    'https://tile.opentopomap.org/{z}/{x}/{y}.png',
-    { attribution: '&copy; OpenTopoMap contributors', maxZoom: 17 }
-  ),
+  dark:    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',  { attribution: '&copy; OpenStreetMap contributors &copy; CartoDB', maxZoom: 19 }),
+  light:   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap contributors &copy; CartoDB', maxZoom: 19 }),
+  terrain: L.tileLayer('https://tile.opentopomap.org/{z}/{x}/{y}.png',                   { attribution: '&copy; OpenTopoMap contributors', maxZoom: 17 }),
 };
 
 basemaps.dark.addTo(map);
 let activeBasemap = 'dark';
 
-// ──────────────────────────────────────────────────────────
-// MARKER HELPERS
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// CNI MARKER HELPERS
+// ══════════════════════════════════════════════════════════
 function makeIcon(emoji, color, size = 32) {
   return L.divIcon({
     className: '',
-    html: `<div class="cni-marker" style="width:${size}px;height:${size}px;background:${color};font-size:${Math.round(size * 0.44)}px">${emoji}</div>`,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
-    popupAnchor: [0, -(size / 2 + 4)],
+    html: `<div class="cni-marker" style="width:${size}px;height:${size}px;background:${color};font-size:${Math.round(size*0.44)}px">${emoji}</div>`,
+    iconSize: [size, size], iconAnchor: [size/2, size/2], popupAnchor: [0, -(size/2+4)],
   });
 }
 
-function statusClass(status = '') {
-  const s = status.toLowerCase();
-  if (s.includes('operational')) return 'status-operational';
+function statusClass(s = '') {
+  s = s.toLowerCase();
+  if (s.includes('operational'))  return 'status-operational';
   if (s.includes('construction')) return 'status-construction';
   if (s.includes('decommission') || s.includes('closed') || s.includes('defuel')) return 'status-decommissioned';
   if (s.includes('closing')) return 'status-closing';
   return 'status-operational';
 }
 
-function buildPopup(site, cat) {
-  const rows = Object.entries(site.info)
-    .map(([k, v]) => {
-      const val = k === 'Status'
-        ? `<span class="status-badge ${statusClass(v)}">${v}</span>`
-        : v;
-      return `<div class="popup-row"><span class="key">${k}</span><span class="val">${val}</span></div>`;
-    })
-    .join('');
+function buildCNIPopup(site, cat) {
+  const rows = Object.entries(site.info).map(([k, v]) => {
+    const val = k === 'Status'
+      ? `<span class="status-badge ${statusClass(v)}">${v}</span>`
+      : v;
+    return `<div class="popup-row"><span class="key">${k}</span><span class="val">${val}</span></div>`;
+  }).join('');
 
   return `
     <div class="popup-header">
@@ -758,36 +936,45 @@ function buildPopup(site, cat) {
       </div>
     </div>
     ${rows}
+    <button class="popup-analyse-btn" onclick="analyseProximity(${site.lat},${site.lng},'${site.name.replace(/'/g,"\\'")}')">
+      📏 Find Nearest Roads
+    </button>
   `;
 }
 
-// ──────────────────────────────────────────────────────────
-// BUILD LAYERS
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// BUILD CNI LAYERS
+// ══════════════════════════════════════════════════════════
 const layerGroups = {};
 const activeLayerIds = new Set(Object.keys(CATEGORIES));
 
 Object.entries(CATEGORIES).forEach(([id, cat]) => {
   const group = L.layerGroup();
-
   cat.sites.forEach(site => {
-    const icon = makeIcon(cat.icon, cat.color);
-    const marker = L.marker([site.lat, site.lng], { icon })
-      .bindPopup(buildPopup(site, cat), { maxWidth: 280, className: '' });
-
+    const marker = L.marker([site.lat, site.lng], { icon: makeIcon(cat.icon, cat.color) })
+      .bindPopup(buildCNIPopup(site, cat), { maxWidth: 280 });
     marker.on('mouseover', function () { this.openPopup(); });
-    marker.on('click', function () { this.openPopup(); });
-
     group.addLayer(marker);
   });
-
   layerGroups[id] = group;
   group.addTo(map);
 });
 
-// ──────────────────────────────────────────────────────────
-// SIDEBAR LAYER LIST
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// SIDEBAR – SECTION COLLAPSE
+// ══════════════════════════════════════════════════════════
+document.querySelectorAll('.section-header').forEach(hdr => {
+  const bodyId = hdr.id.replace('-header', '-body');
+  const body = document.getElementById(bodyId);
+  hdr.addEventListener('click', () => {
+    const collapsed = body.classList.toggle('collapsed');
+    hdr.classList.toggle('collapsed', collapsed);
+  });
+});
+
+// ══════════════════════════════════════════════════════════
+// SIDEBAR – CNI LAYER LIST
+// ══════════════════════════════════════════════════════════
 const layerList = document.getElementById('layer-list');
 
 Object.entries(CATEGORIES).forEach(([id, cat]) => {
@@ -795,7 +982,6 @@ Object.entries(CATEGORIES).forEach(([id, cat]) => {
   item.className = 'layer-item active';
   item.style.setProperty('--cat-color', cat.color);
   item.dataset.id = id;
-
   item.innerHTML = `
     <div class="layer-dot" style="background:${cat.color}">${cat.icon}</div>
     <div class="layer-info">
@@ -804,48 +990,37 @@ Object.entries(CATEGORIES).forEach(([id, cat]) => {
     </div>
     <div class="toggle-switch"></div>
   `;
-
-  item.addEventListener('click', () => toggleLayer(id, item));
-  layerList.appendChild(item);
-});
-
-function toggleLayer(id, item) {
-  if (activeLayerIds.has(id)) {
-    map.removeLayer(layerGroups[id]);
-    activeLayerIds.delete(id);
-    item.classList.remove('active');
-  } else {
-    layerGroups[id].addTo(map);
-    activeLayerIds.add(id);
-    item.classList.add('active');
-  }
-}
-
-document.getElementById('btn-all').addEventListener('click', () => {
-  document.querySelectorAll('.layer-item').forEach(item => {
-    const id = item.dataset.id;
-    if (!activeLayerIds.has(id)) {
+  item.addEventListener('click', () => {
+    if (activeLayerIds.has(id)) {
+      map.removeLayer(layerGroups[id]);
+      activeLayerIds.delete(id);
+      item.classList.remove('active');
+    } else {
       layerGroups[id].addTo(map);
       activeLayerIds.add(id);
       item.classList.add('active');
     }
   });
+  layerList.appendChild(item);
 });
 
-document.getElementById('btn-none').addEventListener('click', () => {
-  document.querySelectorAll('.layer-item').forEach(item => {
+document.getElementById('btn-all').addEventListener('click', () => {
+  document.querySelectorAll('#layer-list .layer-item').forEach(item => {
     const id = item.dataset.id;
-    if (activeLayerIds.has(id)) {
-      map.removeLayer(layerGroups[id]);
-      activeLayerIds.delete(id);
-      item.classList.remove('active');
-    }
+    if (!activeLayerIds.has(id)) { layerGroups[id].addTo(map); activeLayerIds.add(id); item.classList.add('active'); }
   });
 });
 
-// ──────────────────────────────────────────────────────────
+document.getElementById('btn-none').addEventListener('click', () => {
+  document.querySelectorAll('#layer-list .layer-item').forEach(item => {
+    const id = item.dataset.id;
+    if (activeLayerIds.has(id)) { map.removeLayer(layerGroups[id]); activeLayerIds.delete(id); item.classList.remove('active'); }
+  });
+});
+
+// ══════════════════════════════════════════════════════════
 // BASEMAP SWITCHER
-// ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
 document.querySelectorAll('.basemap-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const layer = btn.dataset.layer;
@@ -859,19 +1034,358 @@ document.querySelectorAll('.basemap-btn').forEach(btn => {
   });
 });
 
-// ──────────────────────────────────────────────────────────
-// UPDATE INFO PANEL ON HOVER
-// ──────────────────────────────────────────────────────────
-const infoPanel = document.getElementById('info-panel');
-const totalSites = Object.values(CATEGORIES).reduce((s, c) => s + c.sites.length, 0);
+// ══════════════════════════════════════════════════════════
+// ROAD NETWORK – STATE
+// ══════════════════════════════════════════════════════════
+let roadsEnabled   = false;
+let autoRefresh    = false;
+let isFetching     = false;
+let roadGeoJSON    = null;   // current loaded GeoJSON
+let roadLayer      = null;   // Leaflet GeoJSON layer
+let highlightLayer = null;   // proximity highlight layer
+let moveEndTimer   = null;
 
-infoPanel.innerHTML = `
-  <div class="info-title">UK Critical National Infrastructure</div>
-  <div class="info-body">
-    ${totalSites} sites across ${Object.keys(CATEGORIES).length} sectors mapped.
-    <span class="info-hint">Hover or click a marker for details. Toggle layers to filter.</span>
-  </div>
-`;
+// Expose for console analysis
+window.roadData = null;
+
+// Selected road groups (Set of group ids)
+const selectedRoadGroups = new Set(ROAD_GROUPS.filter(g => g.defaultOn).map(g => g.id));
+
+// ── Road type checkbox grid ───────────────────────────────
+const grid = document.getElementById('road-types-grid');
+ROAD_GROUPS.forEach(g => {
+  const item = document.createElement('div');
+  item.className = 'road-type-item' + (g.defaultOn ? ' rt-active' : '');
+  item.style.setProperty('--rt-color', g.color);
+  item.dataset.id = g.id;
+  item.innerHTML = `
+    <div class="road-swatch"></div>
+    <span class="rt-label">${g.label}</span>
+  `;
+  item.addEventListener('click', () => {
+    if (selectedRoadGroups.has(g.id)) {
+      selectedRoadGroups.delete(g.id);
+      item.classList.remove('rt-active');
+    } else {
+      selectedRoadGroups.add(g.id);
+      item.classList.add('rt-active');
+    }
+  });
+  grid.appendChild(item);
+});
+
+// ── Road legend ───────────────────────────────────────────
+const legend = document.getElementById('road-legend');
+ROAD_GROUPS.forEach(g => {
+  const row = document.createElement('div');
+  row.className = 'legend-row';
+  row.innerHTML = `
+    <div class="legend-line ${g.dash ? 'dashed' : ''}" style="--lc:${g.color};--lw:${Math.min(g.weight,4)}px"></div>
+    <span class="legend-text">${g.label}</span>
+  `;
+  legend.appendChild(row);
+});
+
+// ══════════════════════════════════════════════════════════
+// ROAD NETWORK – MASTER TOGGLE + AUTO-REFRESH TOGGLE
+// ══════════════════════════════════════════════════════════
+const masterSwitch    = document.getElementById('road-master-switch');
+const autoSwitch      = document.getElementById('auto-refresh-switch');
+const btnFetch        = document.getElementById('btn-fetch-roads');
+const btnClear        = document.getElementById('btn-clear-roads');
+
+masterSwitch.addEventListener('click', toggleRoads);
+
+function toggleRoads() {
+  roadsEnabled = !roadsEnabled;
+  masterSwitch.setAttribute('data-on', roadsEnabled ? '1' : '0');
+  btnFetch.disabled = !roadsEnabled;
+  btnClear.disabled = !roadsEnabled;
+  autoSwitch.style.opacity = roadsEnabled ? '1' : '0.5';
+
+  if (roadsEnabled) {
+    legend.style.display = 'block';
+    fetchRoads();
+  } else {
+    legend.style.display = 'none';
+    clearRoads();
+    setRoadStatus('idle', 'Road layer disabled');
+  }
+}
+
+autoSwitch.addEventListener('click', () => {
+  if (!roadsEnabled) return;
+  autoRefresh = !autoRefresh;
+  autoSwitch.style.background = autoRefresh ? '#3b82c4' : '';
+  autoSwitch.setAttribute('data-on', autoRefresh ? '1' : '0');
+});
+
+btnFetch.addEventListener('click', () => { if (!isFetching) fetchRoads(); });
+
+btnClear.addEventListener('click', () => {
+  clearRoads();
+  setRoadStatus('idle', 'Roads cleared');
+});
+
+// ── Map move → auto-refresh ───────────────────────────────
+map.on('moveend', () => {
+  if (!roadsEnabled || !autoRefresh || isFetching) return;
+  clearTimeout(moveEndTimer);
+  moveEndTimer = setTimeout(fetchRoads, 800);
+});
+
+// ══════════════════════════════════════════════════════════
+// ROAD NETWORK – FETCH FROM OVERPASS API
+// ══════════════════════════════════════════════════════════
+async function fetchRoads() {
+  if (!roadsEnabled || isFetching) return;
+
+  const zoom = map.getZoom();
+  if (zoom < 8) {
+    setRoadStatus('warn', '⚠ Zoom in to at least zoom 8 to load roads');
+    return;
+  }
+
+  if (selectedRoadGroups.size === 0) {
+    setRoadStatus('warn', '⚠ Select at least one road type');
+    return;
+  }
+
+  isFetching = true;
+  btnFetch.disabled = true;
+  setRoadStatus('loading', '<span class="spinner">⟳</span> Fetching road data…');
+
+  const bounds = map.getBounds();
+  const bbox   = [bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast()]
+                   .map(n => n.toFixed(5)).join(',');
+
+  // Collect all OSM highway values for selected groups
+  const allTypes = [];
+  ROAD_GROUPS.forEach(g => {
+    if (selectedRoadGroups.has(g.id)) allTypes.push(...g.types);
+  });
+
+  const typeRegex = allTypes.join('|');
+  const query = `[out:json][timeout:30][bbox:${bbox}];`
+    + `way["highway"~"^(${typeRegex})$"];`
+    + `out body;>;out skel qt;`;
+
+  try {
+    const resp = await fetch(
+      'https://overpass-api.de/api/interpreter',
+      { method: 'POST', body: 'data=' + encodeURIComponent(query) }
+    );
+
+    if (!resp.ok) throw new Error(`Overpass API error: HTTP ${resp.status}`);
+
+    const data = await resp.json();
+    const geojson = osmToGeoJSON(data);
+
+    // Remove old layer before adding new
+    clearRoads(false);
+    renderRoads(geojson);
+
+    const seg = geojson.features.length;
+    setRoadStatus('ok', `✓ ${seg.toLocaleString()} road segments loaded · zoom ${zoom}`);
+    if (seg > 5000) {
+      setRoadStatus('warn', `⚠ ${seg.toLocaleString()} segments — consider filtering road types or zooming in`);
+    }
+
+  } catch (err) {
+    setRoadStatus('error', `✗ ${err.message}`);
+  } finally {
+    isFetching = false;
+    btnFetch.disabled = !roadsEnabled;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// ROAD NETWORK – OSM JSON → GEOJSON
+// ══════════════════════════════════════════════════════════
+function osmToGeoJSON(data) {
+  const nodes = {};
+  data.elements.forEach(el => {
+    if (el.type === 'node') nodes[el.id] = [el.lon, el.lat];
+  });
+
+  const features = [];
+  data.elements.forEach(el => {
+    if (el.type !== 'way') return;
+    const coords = (el.nodes || []).map(id => nodes[id]).filter(Boolean);
+    if (coords.length < 2) return;
+    features.push({
+      type: 'Feature',
+      id: el.id,
+      properties: { ...(el.tags || {}), _osmId: el.id },
+      geometry: { type: 'LineString', coordinates: coords },
+    });
+  });
+
+  return { type: 'FeatureCollection', features };
+}
+
+// ══════════════════════════════════════════════════════════
+// ROAD NETWORK – RENDER
+// ══════════════════════════════════════════════════════════
+function renderRoads(geojson) {
+  roadGeoJSON = geojson;
+  window.roadData = geojson;  // expose for analysis scripts
+
+  roadLayer = L.geoJSON(geojson, {
+    style: feature => {
+      const hw  = feature.properties.highway || '';
+      const grp = ROAD_TYPE_MAP[hw];
+      if (!grp) return { color: '#555', weight: 1, opacity: 0.4 };
+      return {
+        color:     grp.color,
+        weight:    grp.weight,
+        opacity:   hw.includes('_link') ? 0.65 : 0.85,
+        dashArray: grp.dash || null,
+        lineCap:   'round',
+        lineJoin:  'round',
+      };
+    },
+    onEachFeature: (feature, layer) => {
+      const p    = feature.properties;
+      const hw   = p.highway || 'unknown';
+      const grp  = ROAD_TYPE_MAP[hw] || { label: hw, color: '#888' };
+      const name = p.name || p.ref || '(unnamed)';
+      const ref  = p.ref  ? `<div class="popup-row"><span class="key">Ref</span><span class="val">${p.ref}</span></div>` : '';
+      const surf = p.surface ? `<div class="popup-row"><span class="key">Surface</span><span class="val">${p.surface}</span></div>` : '';
+      const spd  = p.maxspeed ? `<div class="popup-row"><span class="key">Speed limit</span><span class="val">${p.maxspeed}</span></div>` : '';
+      const lanes= p.lanes ? `<div class="popup-row"><span class="key">Lanes</span><span class="val">${p.lanes}</span></div>` : '';
+
+      layer.bindPopup(`
+        <div class="popup-header">
+          <div class="popup-icon" style="background:${grp.color}20;border:2px solid ${grp.color}50">
+            <span style="font-size:18px">🛣️</span>
+          </div>
+          <div class="popup-title">
+            <h3>${name}</h3>
+            <div class="popup-cat" style="color:${grp.color}">${grp.label}</div>
+          </div>
+        </div>
+        ${ref}${surf}${spd}${lanes}
+        <div class="popup-row"><span class="key">OSM ID</span><span class="val">${p._osmId}</span></div>
+      `, { maxWidth: 260 });
+
+      layer.on('mouseover', function () { this.setStyle({ weight: Math.min((ROAD_TYPE_MAP[hw]?.weight || 2) + 2, 8), opacity: 1 }); this.openPopup(); });
+      layer.on('mouseout',  function () { roadLayer && roadLayer.resetStyle(this); });
+    },
+  });
+
+  // Roads go behind CNI markers
+  roadLayer.addTo(map);
+  roadLayer.bringToBack();
+  // Push tiles even further back
+  Object.values(basemaps).forEach(t => { if (map.hasLayer(t)) t.bringToBack(); });
+  btnClear.disabled = false;
+}
+
+function clearRoads(resetStatus = true) {
+  if (roadLayer) { map.removeLayer(roadLayer); roadLayer = null; }
+  if (highlightLayer) { map.removeLayer(highlightLayer); highlightLayer = null; }
+  roadGeoJSON = null;
+  window.roadData = null;
+  btnClear.disabled = true;
+  if (resetStatus) setRoadStatus('idle', 'Roads cleared');
+}
+
+// ══════════════════════════════════════════════════════════
+// ROAD NETWORK – STATUS BAR
+// ══════════════════════════════════════════════════════════
+function setRoadStatus(type, msg) {
+  const el = document.getElementById('road-status');
+  el.className = `status-${type}`;
+  el.innerHTML = msg;
+}
+
+// ══════════════════════════════════════════════════════════
+// ANALYSIS – PROXIMITY TO NEAREST ROAD BY TYPE
+// ══════════════════════════════════════════════════════════
+function analyseProximity(lat, lng, name) {
+  const panel = document.getElementById('analysis-panel');
+  const body  = document.getElementById('ap-body');
+  const title = document.getElementById('ap-title');
+
+  if (!roadGeoJSON || roadGeoJSON.features.length === 0) {
+    body.innerHTML = '<p style="font-size:11px;color:#556a8a;padding:4px 0">No road data loaded. Enable the Road Network layer and fetch roads first.</p>';
+    panel.style.display = 'block';
+    title.textContent = name;
+    return;
+  }
+
+  title.textContent = name;
+  body.innerHTML = '<p style="font-size:11px;color:#7ab3d4;padding:4px 0">Calculating distances…</p>';
+  panel.style.display = 'block';
+
+  // Run async so the "calculating" text renders first
+  setTimeout(() => {
+    const sitePoint = turf.point([lng, lat]);
+
+    // For each group, find minimum distance across all features in that group
+    const results = [];
+    ROAD_GROUPS.forEach(grp => {
+      const groupFeatures = roadGeoJSON.features.filter(f =>
+        grp.types.includes(f.properties.highway)
+      );
+      if (groupFeatures.length === 0) return;
+
+      let minDist = Infinity;
+      let nearest = null;
+      groupFeatures.forEach(f => {
+        try {
+          const d = turf.pointToLineDistance(sitePoint, f, { units: 'kilometers' });
+          if (d < minDist) { minDist = d; nearest = f; }
+        } catch (_) {}
+      });
+
+      if (minDist < Infinity) {
+        results.push({ grp, dist: minDist, nearest });
+      }
+    });
+
+    results.sort((a, b) => a.dist - b.dist);
+
+    if (results.length === 0) {
+      body.innerHTML = '<p style="font-size:11px;color:#556a8a;padding:4px 0">No matching roads found in loaded data.</p>';
+      return;
+    }
+
+    // Draw highlight for closest road
+    if (highlightLayer) map.removeLayer(highlightLayer);
+    if (results[0]?.nearest) {
+      highlightLayer = L.geoJSON(results[0].nearest, {
+        style: { color: '#ffffff', weight: 4, opacity: 0.8, dashArray: '6,4' }
+      }).addTo(map);
+    }
+
+    // Render results
+    body.innerHTML = results.map(r => {
+      const distStr = r.dist < 1
+        ? `<strong>${(r.dist * 1000).toFixed(0)} m</strong>`
+        : `<strong>${r.dist.toFixed(2)} km</strong>`;
+      const roadName = r.nearest?.properties?.name || r.nearest?.properties?.ref || '';
+      return `
+        <div class="proximity-result">
+          <div class="pr-road">
+            <div class="pr-swatch" style="background:${r.grp.color}"></div>
+            <span class="pr-label">${r.grp.label}</span>
+          </div>
+          <div class="pr-dist">${distStr} ${roadName ? `<span style="color:#3d5070">· ${roadName}</span>` : ''}</div>
+        </div>
+      `;
+    }).join('');
+
+    body.innerHTML += `<p style="font-size:9px;color:#3d5070;margin-top:8px">Nearest highlighted. window.roadData available for further analysis.</p>`;
+  }, 10);
+}
+
+document.getElementById('ap-close').addEventListener('click', () => {
+  document.getElementById('analysis-panel').style.display = 'none';
+  if (highlightLayer) { map.removeLayer(highlightLayer); highlightLayer = null; }
+});
+
 </script>
 </body>
 </html>
