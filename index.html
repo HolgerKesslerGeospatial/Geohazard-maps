@@ -688,9 +688,25 @@
 
   <div id="sidebar-footer">
     Roads: &copy; OpenStreetMap contributors (ODbL) &bull; CNI: public sources<br>
-    For information purposes only &bull; Not for operational use
+    For information purposes only &bull; Not for operational use<br>
+    <span id="rs-key-status" style="cursor:pointer;color:#3b82c4" onclick="clearRSKey()">Road Stat key: not set</span>
   </div>
 
+</div>
+
+<!-- ═══════════════════════ KEY PROMPT MODAL ══════════════ -->
+<div id="rs-key-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:#12141f;border:1px solid #243b55;border-radius:12px;padding:24px;width:320px;box-shadow:0 16px 48px rgba(0,0,0,0.8)">
+    <div style="font-size:14px;font-weight:700;color:#e0e8f8;margin-bottom:6px">Road Stat API Key</div>
+    <div style="font-size:11px;color:#556a8a;margin-bottom:14px;line-height:1.5">
+      Enter your Road Stat API key. It is stored only for this browser session and never saved to the repository.
+    </div>
+    <input id="rs-key-input" type="password" placeholder="sk_…" style="width:100%;padding:8px 10px;background:#1a1d2e;border:1px solid #2a3050;border-radius:6px;color:#c8d6e8;font-size:12px;font-family:monospace;outline:none;margin-bottom:12px" />
+    <div style="display:flex;gap:8px">
+      <button id="rs-key-submit" style="flex:1;padding:8px;background:#1e3a5f;border:1px solid #3b82c4;border-radius:6px;color:#7ab3d4;font-size:11px;font-weight:700;cursor:pointer">Confirm</button>
+      <button id="rs-key-cancel" style="padding:8px 14px;background:#1e2438;border:1px solid #2a3050;border-radius:6px;color:#556a8a;font-size:11px;cursor:pointer">Cancel</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════════════════ MAP ═══════════════════════════ -->
@@ -1048,6 +1064,36 @@ let moveEndTimer   = null;
 // Expose for console analysis
 window.roadData = null;
 
+// ── Road Stat API ─────────────────────────────────────────
+const RS_BASE = 'https://road-stat-api-production.up.railway.app';
+
+function getRSKey() {
+  return sessionStorage.getItem('rs_api_key') || '';
+}
+
+function promptRSKey() {
+  return new Promise(resolve => {
+    const overlay = document.getElementById('rs-key-overlay');
+    const input   = document.getElementById('rs-key-input');
+    const btn     = document.getElementById('rs-key-submit');
+    const cancel  = document.getElementById('rs-key-cancel');
+    overlay.style.display = 'flex';
+    input.value = '';
+    input.focus();
+    const confirm = () => {
+      const val = input.value.trim();
+      if (!val) return;
+      sessionStorage.setItem('rs_api_key', val);
+      overlay.style.display = 'none';
+      resolve(val);
+    };
+    const dismiss = () => { overlay.style.display = 'none'; resolve(null); };
+    btn.onclick    = confirm;
+    cancel.onclick = dismiss;
+    input.onkeydown = e => { if (e.key === 'Enter') confirm(); if (e.key === 'Escape') dismiss(); };
+  });
+}
+
 // Selected road groups (Set of group ids)
 const selectedRoadGroups = new Set(ROAD_GROUPS.filter(g => g.defaultOn).map(g => g.id));
 
@@ -1250,10 +1296,15 @@ function renderRoads(geojson) {
       const hw   = p.highway || 'unknown';
       const grp  = ROAD_TYPE_MAP[hw] || { label: hw, color: '#888' };
       const name = p.name || p.ref || '(unnamed)';
+      const usrn = p['ref:USRN'] || p['ref:usrn'] || '';
       const ref  = p.ref  ? `<div class="popup-row"><span class="key">Ref</span><span class="val">${p.ref}</span></div>` : '';
-      const surf = p.surface ? `<div class="popup-row"><span class="key">Surface</span><span class="val">${p.surface}</span></div>` : '';
+      const surf = p.surface  ? `<div class="popup-row"><span class="key">Surface</span><span class="val">${p.surface}</span></div>` : '';
       const spd  = p.maxspeed ? `<div class="popup-row"><span class="key">Speed limit</span><span class="val">${p.maxspeed}</span></div>` : '';
-      const lanes= p.lanes ? `<div class="popup-row"><span class="key">Lanes</span><span class="val">${p.lanes}</span></div>` : '';
+      const lanes= p.lanes    ? `<div class="popup-row"><span class="key">Lanes</span><span class="val">${p.lanes}</span></div>` : '';
+      const usrnRow = usrn    ? `<div class="popup-row"><span class="key">USRN</span><span class="val">${usrn}</span></div>` : '';
+      const rsBtn = usrn
+        ? `<button class="popup-analyse-btn" onclick="fetchRoadStats('${usrn}','${name.replace(/'/g,"\\'")}')">📊 Load Road Stat Data</button>`
+        : `<div style="font-size:10px;color:#3d5070;margin-top:8px;text-align:center">No USRN tag — Road Stat unavailable for this segment</div>`;
 
       layer.bindPopup(`
         <div class="popup-header">
@@ -1265,9 +1316,10 @@ function renderRoads(geojson) {
             <div class="popup-cat" style="color:${grp.color}">${grp.label}</div>
           </div>
         </div>
-        ${ref}${surf}${spd}${lanes}
+        ${ref}${usrnRow}${surf}${spd}${lanes}
         <div class="popup-row"><span class="key">OSM ID</span><span class="val">${p._osmId}</span></div>
-      `, { maxWidth: 260 });
+        ${rsBtn}
+      `, { maxWidth: 280 });
 
       layer.on('mouseover', function () { this.setStyle({ weight: Math.min((ROAD_TYPE_MAP[hw]?.weight || 2) + 2, 8), opacity: 1 }); this.openPopup(); });
       layer.on('mouseout',  function () { roadLayer && roadLayer.resetStyle(this); });
@@ -1385,6 +1437,153 @@ document.getElementById('ap-close').addEventListener('click', () => {
   document.getElementById('analysis-panel').style.display = 'none';
   if (highlightLayer) { map.removeLayer(highlightLayer); highlightLayer = null; }
 });
+
+// ══════════════════════════════════════════════════════════
+// ROAD STAT API – FETCH & RENDER
+// ══════════════════════════════════════════════════════════
+async function fetchRoadStats(usrn, roadName) {
+  const panel = document.getElementById('analysis-panel');
+  const body  = document.getElementById('ap-body');
+  const title = document.getElementById('ap-title');
+
+  title.textContent = roadName || `USRN ${usrn}`;
+  panel.style.display = 'block';
+
+  let key = getRSKey();
+  if (!key) {
+    body.innerHTML = '<p style="font-size:11px;color:#7ab3d4">Enter your Road Stat API key to continue…</p>';
+    key = await promptRSKey();
+    if (!key) { body.innerHTML = '<p style="font-size:11px;color:#556a8a">Cancelled.</p>'; return; }
+  }
+
+  body.innerHTML = `<p style="font-size:11px;color:#7ab3d4;padding:4px 0"><span class="spinner">⟳</span> Loading Road Stat data for USRN ${usrn}…</p>`;
+
+  const hdrs = { 'X-API-Key': key };
+
+  const safeFetch = url =>
+    fetch(url, { headers: hdrs }).then(r => {
+      if (r.status === 401 || r.status === 403) {
+        sessionStorage.removeItem('rs_api_key');
+        throw new Error('Invalid or expired API key');
+      }
+      return r.json();
+    });
+
+  const [soilRes, infoRes, histRes, uprnRes] = await Promise.allSettled([
+    safeFetch(`${RS_BASE}/usrn-soil-attribution?usrn=${usrn}`),
+    safeFetch(`${RS_BASE}/usrn-info?usrn=${usrn}`),
+    safeFetch(`${RS_BASE}/usrn-history?usrn=${usrn}`),
+    safeFetch(`${RS_BASE}/uprns-per-usrn?usrn=${usrn}`),
+  ]);
+
+  if ([soilRes, infoRes, histRes, uprnRes].every(r => r.status === 'rejected' && r.reason?.message === 'Invalid or expired API key')) {
+    body.innerHTML = `<p style="font-size:11px;color:#eb3b5a">API key rejected. <button class="popup-analyse-btn" onclick="fetchRoadStats('${usrn}','${roadName}')">Try again</button></p>`;
+    return;
+  }
+
+  const get = r => r.status === 'fulfilled' ? r.value : null;
+  const soil = get(soilRes);
+  const info = get(infoRes);
+  const hist = get(histRes);
+  const uprn = get(uprnRes);
+
+  body.innerHTML = renderRoadStatResults(usrn, soil, info, hist, uprn);
+}
+
+function renderRoadStatResults(usrn, soil, info, hist, uprn) {
+  let html = `<div style="font-size:9px;color:#3d5070;margin-bottom:8px">USRN: ${usrn}</div>`;
+
+  // ── Street info ──
+  if (info && !info.detail) {
+    const auth = info.highway_authority || info.highway_authority_swa_code || '—';
+    const street = info.street_name || info.usrn_street_name || '—';
+    const promoters = Array.isArray(info.promoters) ? info.promoters.length : '—';
+    html += rsSection('🏛️ Street Info', `
+      ${rsRow('Street', street)}
+      ${rsRow('Authority', auth)}
+      ${rsRow('Known promoters', promoters)}
+    `);
+  }
+
+  // ── Soil / geology ──
+  if (soil && !soil.detail) {
+    const entries = Array.isArray(soil) ? soil : (soil.data || [soil]);
+    const geology  = [...new Set(entries.map(e => e.GEOLOGY  || e.geology  || '').filter(Boolean))].join(', ') || '—';
+    const soilsc   = [...new Set(entries.map(e => e.SOILSCAPE || e.soilscape || '').filter(Boolean))].join(', ') || '—';
+    const drainage = [...new Set(entries.map(e => e.DRAINAGE  || e.drainage  || '').filter(Boolean))].join(', ') || '—';
+    const drainsTo = [...new Set(entries.map(e => e.DRAINS_TO || e.drains_to || '').filter(Boolean))].join(', ') || '—';
+    html += rsSection('🪨 Soil & Geology', `
+      ${rsRow('Geology', geology)}
+      ${rsRow('Soilscape', soilsc)}
+      ${rsRow('Drainage', drainage)}
+      ${rsRow('Drains to', drainsTo)}
+    `);
+  }
+
+  // ── Works history ──
+  if (hist && !hist.detail) {
+    const years = Array.isArray(hist) ? hist : (hist.data || hist.history || []);
+    if (years.length > 0) {
+      const rows = years.slice(0, 5).map(y => {
+        const yr  = y.fiscal_year || y.year || '?';
+        const tot = y.permits || y.total_permits || 0;
+        const emg = y.emergency || y.emergency_permits || 0;
+        return `<div class="popup-row">
+          <span class="key">${yr}</span>
+          <span class="val">${tot} permits${emg > 0 ? ` · ${emg} emergency` : ''}</span>
+        </div>`;
+      }).join('');
+      html += rsSection('🚧 Works History', rows);
+    }
+  }
+
+  // ── UPRNs ──
+  if (uprn && !uprn.detail) {
+    const count = uprn.uprn_count ?? uprn.count ?? uprn[Object.keys(uprn)[0]] ?? '—';
+    html += rsSection('🏠 Properties', rsRow('UPRN count', count));
+  }
+
+  if (html === `<div style="font-size:9px;color:#3d5070;margin-bottom:8px">USRN: ${usrn}</div>`) {
+    html += `<p style="font-size:11px;color:#556a8a">No data returned — USRN may not be in Road Stat database.</p>`;
+  }
+
+  return html;
+}
+
+function rsSection(title, content) {
+  return `
+    <div style="margin-bottom:8px">
+      <div style="font-size:10px;font-weight:700;color:#7ab3d4;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid #1e2438">${title}</div>
+      ${content}
+    </div>`;
+}
+
+function rsRow(key, val) {
+  return `<div class="popup-row"><span class="key">${key}</span><span class="val" style="max-width:170px;word-break:break-word">${val}</span></div>`;
+}
+
+function clearRSKey() {
+  sessionStorage.removeItem('rs_api_key');
+  updateRSKeyStatus();
+}
+
+function updateRSKeyStatus() {
+  const el = document.getElementById('rs-key-status');
+  if (!el) return;
+  const set = !!sessionStorage.getItem('rs_api_key');
+  el.textContent = set ? 'Road Stat key: set (click to clear)' : 'Road Stat key: not set';
+  el.style.color  = set ? '#20bf6b' : '#3b82c4';
+}
+
+// Patch promptRSKey to update status after key is saved
+const _origPrompt = promptRSKey;
+window.promptRSKey = async function() {
+  const k = await _origPrompt();
+  updateRSKeyStatus();
+  return k;
+};
+
+updateRSKeyStatus();
 
 </script>
 </body>
